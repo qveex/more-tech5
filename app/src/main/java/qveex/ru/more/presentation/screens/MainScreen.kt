@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import qveex.ru.more.presentation.components.BottomNav
 import qveex.ru.more.presentation.navigation.SetupNavHost
 
 @OptIn(
@@ -27,7 +28,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = { },
-        bottomBar = { }
+        bottomBar = { BottomNav(navController) }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             SetupNavHost(navController = navController)
