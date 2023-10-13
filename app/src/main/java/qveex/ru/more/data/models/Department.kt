@@ -7,7 +7,7 @@ data class Department(
     val departmentId: Long,
     val address: String,
     val metroStation: String,
-    val status: String,
+    val status: Status,
     val distance: Int,
     val workload: Int,
     val location: Location,
@@ -15,3 +15,10 @@ data class Department(
     val legal: List<Entity>,
     val individual: List<Entity>
 )
+
+@Serializable
+enum class Status {
+    OPEN,
+    CLOSED,
+    TECHNICAL_PROBLEMS
+}

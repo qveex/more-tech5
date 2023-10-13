@@ -4,4 +4,6 @@
     <string name="title_home">Home</string>
     <string name="title_info">Info</string>
     <string name="title_departments">Departments</string>
+    <string name="title_closed">Closed</string>
+    <string name="title_open">Open</string>
 </resources>

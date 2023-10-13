@@ -3,6 +3,7 @@ package qveex.ru.more.data.remote
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.Location
+import qveex.ru.more.data.models.Objects
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -23,6 +24,6 @@ interface Api {
     suspend fun getDepartmentsAndAtmsAround(
         @Query("leftTopCoordinate") leftTopCoordinate : Location,
         @Query("rightBottomCoordinate") rightBottomCoordinate : Location
-    )
+    ): Objects
 
 }

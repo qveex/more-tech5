@@ -12,7 +12,8 @@ class HomeContract {
     }
 
     data class State(
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val atmsAndDepartments: List<AtmDepartment> = emptyList()
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {

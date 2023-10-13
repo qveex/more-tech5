@@ -28,7 +28,7 @@ class DepartmentInfoViewModel @Inject constructor(
             setState {
                 copy(department = "$id")
             }
-            interactor.getInfo(id)
+            //interactor.getInfo(id)
         }
     }
 

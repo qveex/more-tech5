@@ -1,9 +1,19 @@
 package qveex.ru.more.presentation.screens.home
 
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import qveex.ru.more.R
+import qveex.ru.more.data.models.Atm
+import qveex.ru.more.data.models.Days
+import qveex.ru.more.data.models.Department
+import qveex.ru.more.data.models.InfrastructureType
+import qveex.ru.more.data.models.Location
+import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.interactor.HomeInteractor
 import qveex.ru.more.presentation.base.BaseViewModel
 import qveex.ru.more.utils.ResourceProvider
+import java.util.Calendar
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,8 +30,32 @@ class HomeViewModel @Inject constructor(
         private const val TAG = "HomeViewModel"
     }
 
-    init {
+    private val curDay = when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+        Calendar.MONDAY    -> Days.MONDAY
+        Calendar.TUESDAY   -> Days.TUESDAY
+        Calendar.WEDNESDAY -> Days.WEDNESDAY
+        Calendar.THURSDAY  -> Days.THURSDAY
+        Calendar.FRIDAY    -> Days.FRIDAY
+        Calendar.SATURDAY  -> Days.SATURDAY
+        Calendar.SUNDAY    -> Days.SUNDAY
+        else -> Days.MONDAY
+    }
 
+    init {
+        viewModelScope.launch {
+            val objects = interactor.getDepartmentsAndAtmsAround(
+                leftTopCoordinate = Location(.0, .0),
+                rightBottomCoordinate = Location(.0, .0)
+            )
+            setState {
+                copy(
+                    atmsAndDepartments = with(objects) {
+                        atms.map { it.toUi() } +
+                        departments.map { it.toUi() }
+                    }.sortedBy { it.distance }
+                )
+            }
+        }
     }
 
     override fun setInitialState() = HomeContract.State()
@@ -44,4 +78,37 @@ class HomeViewModel @Inject constructor(
             HomeContract.Effect.Success("$atmId")
         }
     }
+
+    private fun Department.toUi() = AtmDepartment(
+        address = address,
+        metro = metroStation,
+        distance = 123, // todo посчитать расстояние от местонахождения пользователя
+        location = location,
+        type = InfrastructureType.DEPARTMENT,
+        status = status,
+        openAt = individual.find { it.day == curDay }?.openHours?.from
+            ?: resProvider.getString(R.string.title_closed),
+        closeAt = individual.find { it.day == curDay }?.openHours?.to
+            ?: resProvider.getString(R.string.title_open),
+    )
+
+    private fun Atm.toUi() = AtmDepartment(
+        address = address,
+        metro = metroStation,
+        distance = 123, // todo посчитать расстояние от местонахождения пользователя
+        location = location,
+        type = InfrastructureType.ATM,
+        status = Status.OPEN
+    )
 }
+
+data class AtmDepartment(
+    val address: String,
+    val metro: String,
+    val distance: Int,
+    val location: Location,
+    val type: InfrastructureType,
+    val status: Status,
+    val openAt: String? = null,
+    val closeAt: String? = null
+)
