@@ -55,13 +55,12 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(it)
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary)
+                .background(MaterialTheme.colorScheme.secondary)
                 .clickable { onEventSent(HomeContract.Event.SelectDepartment) },
             contentAlignment = Alignment.Center
         ) {
             Text("Home")
         }
     }
-
 
 }
