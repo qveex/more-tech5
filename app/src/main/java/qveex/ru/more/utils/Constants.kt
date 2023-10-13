@@ -5,7 +5,9 @@ import java.util.Locale
 
 object Constants {
 
-    const val BASE_URL = ""
+    const val BASE_URL = "https://www.google.com/"
+
+    const val PREFERENCES_NAME = "5heads_preferences"
 
     const val SCREEN_TRANSIT_DURATION_MILLIS = 400
 

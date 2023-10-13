@@ -10,6 +10,7 @@ sealed class Screen(
     val icon: ImageVector? = null
 ) {
     data object Home : Screen("home", R.string.title_home)
+    data object Onboarding : Screen("onboarding")
     data object Departments : Screen("departments", R.string.title_departments)
     data object DepartmentInfo : Screen("departmentInfo")
 }

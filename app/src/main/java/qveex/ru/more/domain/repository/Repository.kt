@@ -7,6 +7,6 @@ class Repository @Inject constructor(
     private val remote: RemoteDataSource
 ) {
 
-
+    suspend fun get() = remote.get()
 
 }

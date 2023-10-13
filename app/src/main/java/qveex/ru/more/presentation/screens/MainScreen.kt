@@ -6,9 +6,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import qveex.ru.more.presentation.navigation.SetupNavHost
 
 @OptIn(
@@ -27,6 +31,23 @@ fun MainScreen() {
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             SetupNavHost(navController = navController)
+        }
+    }
+}
+
+fun snack(
+    scope: CoroutineScope,
+    scaffold: SnackbarHostState,
+    msg: String,
+    actionLabel: String? = null
+) {
+    scope.launch {
+        scaffold.apply {
+            showSnackbar(
+                message = msg,
+                actionLabel = actionLabel,
+                duration = SnackbarDuration.Short
+            )
         }
     }
 }

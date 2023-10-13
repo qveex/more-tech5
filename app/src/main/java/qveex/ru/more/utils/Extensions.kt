@@ -1,9 +1,17 @@
 package qveex.ru.more.utils
 
+import android.util.Log
+import androidx.navigation.NavController
 import qveex.ru.more.utils.Constants.dateFormat
 import qveex.ru.more.utils.Constants.dateTimeFormat
 import qveex.ru.more.utils.Constants.timeFormat
 import java.util.Date
+
+fun NavController.safeNavigate(route: String) = try {
+    navigate(route) { launchSingleTop = true }
+} catch (e: IllegalArgumentException) {
+    Log.e("Navigation", "safeNavigate failed: $e")
+}
 
 val Long.time: String get() = timeFormat.format(Date(this))
 

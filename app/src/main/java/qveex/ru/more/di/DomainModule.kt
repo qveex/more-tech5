@@ -7,6 +7,7 @@ import dagger.hilt.components.SingletonComponent
 import qveex.ru.more.domain.interactor.DepartmentInteractor
 import qveex.ru.more.domain.interactor.HomeInteractor
 import qveex.ru.more.domain.interactor.Interactors
+import qveex.ru.more.domain.interactor.OnboardingInteractor
 import qveex.ru.more.domain.repository.Repository
 import javax.inject.Singleton
 
@@ -19,6 +20,16 @@ object DomainModule {
     fun provideInteractors(repository: Repository) = Interactors(
         homeInteractor = HomeInteractor(repository),
         departmentInteractor = DepartmentInteractor(repository),
+        onboardingInteractor = OnboardingInteractor(repository)
     )
+
+    @Provides
+    fun provideHomeInteractor(interactors: Interactors) = interactors.homeInteractor
+
+    @Provides
+    fun provideDepartmentsInteractor(interactors: Interactors) = interactors.departmentInteractor
+
+    @Provides
+    fun provideOnboardingInteractor(interactors: Interactors) = interactors.onboardingInteractor
 
 }
