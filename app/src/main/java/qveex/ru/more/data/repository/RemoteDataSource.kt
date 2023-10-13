@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.remote.Api
 import javax.inject.Inject
 
@@ -18,14 +19,12 @@ class RemoteDataSource @Inject constructor(
     suspend fun getDepartmentInfo(departmentId: Long) =
         scope.async { api.getDepartmentInfo(departmentId) }.await()
     suspend fun getDepartmentsAndAtmsAround(
-        latitude: Double,
-        longitude: Double,
-        radius: Double
+        leftTopCoordinate: Location,
+        rightBottomCoordinate: Location,
     ) = scope.async {
         api.getDepartmentsAndAtmsAround(
-            latitude = latitude,
-            longitude = longitude,
-            radius = radius
+            leftTopCoordinate = leftTopCoordinate,
+            rightBottomCoordinate = rightBottomCoordinate,
         )
     }.await()
 

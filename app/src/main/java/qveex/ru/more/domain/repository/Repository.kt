@@ -1,5 +1,6 @@
 package qveex.ru.more.domain.repository
 
+import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.repository.RemoteDataSource
 import javax.inject.Inject
 
@@ -11,13 +12,11 @@ class Repository @Inject constructor(
     suspend fun getDepartmentInfo(departmentId: Long) = remote.getDepartmentInfo(departmentId)
 
     suspend fun getDepartmentsAndAtmsAround(
-        latitude: Double,
-        longitude: Double,
-        radius: Double
+        leftTopCoordinate: Location,
+        rightBottomCoordinate: Location
     ) = remote.getDepartmentsAndAtmsAround(
-        latitude,
-        longitude,
-        radius
+        leftTopCoordinate,
+        rightBottomCoordinate
     )
 
 }
