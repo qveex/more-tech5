@@ -8,19 +8,18 @@ import com.google.accompanist.navigation.animation.composable
 import qveex.ru.more.presentation.navigation.Screen
 import qveex.ru.more.presentation.navigation.defaultEnter
 import qveex.ru.more.presentation.navigation.defaultExit
-import qveex.ru.more.presentation.screens.departments.DepartmentsScreen
-import qveex.ru.more.presentation.screens.departments.DepartmentsViewModel
-import qveex.ru.more.utils.safeNavigate
+import qveex.ru.more.presentation.screens.department_info.DepartmentInfoViewModel
+import qveex.ru.more.presentation.screens.department_info.DepartmentInfoScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.departmentsNav(navController: NavController) {
     composable(
-        route = Screen.Departments.route,
+        route = Screen.DepartmentInfo.route,
         enterTransition = { defaultEnter },
         exitTransition = { defaultExit }
     ) {
-        val viewModel = hiltViewModel<DepartmentsViewModel>()
-        DepartmentsScreen(
+        val viewModel = hiltViewModel<DepartmentInfoViewModel>()
+        DepartmentInfoScreen(
             state = viewModel.viewState.value,
             effectFlow = viewModel.effect,
             onEventSent = viewModel::setEvent,

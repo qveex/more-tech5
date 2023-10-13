@@ -21,7 +21,7 @@ fun BottomNav(navController: NavHostController) {
 
     val screens = listOf(
         Screen.Home,
-        Screen.Departments
+        Screen.DepartmentInfo
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination

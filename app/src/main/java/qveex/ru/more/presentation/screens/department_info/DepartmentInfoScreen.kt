@@ -1,4 +1,4 @@
-package qveex.ru.more.presentation.screens.departments
+package qveex.ru.more.presentation.screens.department_info
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -23,15 +23,15 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.presentation.screens.snack
 
-private const val TAG = "DepartmentsScreen"
+private const val TAG = "DepartmentInfoScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DepartmentsScreen(
-    state: DepartmentsContract.State,
-    effectFlow: Flow<DepartmentsContract.Effect>?,
-    onEventSent: (event: DepartmentsContract.Event) -> Unit,
-    onNavigationRequested: (navigationEffect: DepartmentsContract.Effect.Navigation) -> Unit
+fun DepartmentInfoScreen(
+    state: DepartmentInfoContract.State,
+    effectFlow: Flow<DepartmentInfoContract.Effect>?,
+    onEventSent: (event: DepartmentInfoContract.Event) -> Unit,
+    onNavigationRequested: (navigationEffect: DepartmentInfoContract.Effect.Navigation) -> Unit
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -41,9 +41,9 @@ fun DepartmentsScreen(
         Log.i(TAG, "Departments Screen Launched")
         effectFlow?.onEach { effect ->
             when (effect) {
-                is DepartmentsContract.Effect.Error -> snack(coroutineScope, snackbarHostState, effect.error)
-                is DepartmentsContract.Effect.Success -> snack(coroutineScope, snackbarHostState, effect.success)
-                is DepartmentsContract.Effect.Navigation -> onNavigationRequested(effect)
+                is DepartmentInfoContract.Effect.Error -> snack(coroutineScope, snackbarHostState, effect.error)
+                is DepartmentInfoContract.Effect.Success -> snack(coroutineScope, snackbarHostState, effect.success)
+                is DepartmentInfoContract.Effect.Navigation -> onNavigationRequested(effect)
             }
         }?.collect()
     }
@@ -56,7 +56,7 @@ fun DepartmentsScreen(
                 .padding(it)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.tertiary)
-                .clickable { onEventSent(DepartmentsContract.Event.Click) },
+                .clickable { onEventSent(DepartmentInfoContract.Event.Click) },
             contentAlignment = Alignment.Center
         ) {
             Text("Departments")

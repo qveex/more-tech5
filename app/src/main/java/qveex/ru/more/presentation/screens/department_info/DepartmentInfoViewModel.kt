@@ -1,4 +1,4 @@
-package qveex.ru.more.presentation.screens.departments
+package qveex.ru.more.presentation.screens.department_info
 
 import dagger.hilt.android.lifecycle.HiltViewModel
 import qveex.ru.more.domain.interactor.DepartmentInteractor
@@ -7,19 +7,19 @@ import qveex.ru.more.utils.ResourceProvider
 import javax.inject.Inject
 
 @HiltViewModel
-class DepartmentsViewModel @Inject constructor(
+class DepartmentInfoViewModel @Inject constructor(
     private val interactor: DepartmentInteractor,
     private val resProvider: ResourceProvider
 ) : BaseViewModel<
-        DepartmentsContract.Event,
-        DepartmentsContract.State,
-        DepartmentsContract.Effect,
+        DepartmentInfoContract.Event,
+        DepartmentInfoContract.State,
+        DepartmentInfoContract.Effect,
         >() {
-    override fun setInitialState() = DepartmentsContract.State()
+    override fun setInitialState() = DepartmentInfoContract.State()
 
-    override fun handleEvents(event: DepartmentsContract.Event) {
+    override fun handleEvents(event: DepartmentInfoContract.Event) {
         when (event) {
-            is DepartmentsContract.Event.Click -> {}
+            is DepartmentInfoContract.Event.Click -> {}
             else -> {}
         }
     }

@@ -20,7 +20,7 @@ class HomeContract {
         data class Success(val success: String): Effect()
 
         sealed class Navigation : Effect() {
-            data object ToDepartmentsScreen : Navigation()
+            data object ToDepartmentInfoScreen : Navigation()
         }
     }
 }

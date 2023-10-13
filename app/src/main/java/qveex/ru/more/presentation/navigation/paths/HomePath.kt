@@ -28,7 +28,7 @@ fun NavGraphBuilder.homeNav(navController: NavController) {
             onNavigationRequested = {
                 navController.safeNavigate(
                     when (it) {
-                        is HomeContract.Effect.Navigation.ToDepartmentsScreen -> Screen.Departments.route
+                        is HomeContract.Effect.Navigation.ToDepartmentInfoScreen -> Screen.DepartmentInfo.route
                     }
                 )
             }

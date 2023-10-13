@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.onEach
 
 import qveex.ru.more.presentation.screens.snack
 
-private const val TAG = "DepartmentsScreen"
+private const val TAG = "DepartmentInfoScreen"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
