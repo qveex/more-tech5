@@ -56,7 +56,7 @@ fun HomeScreen(
                 .padding(it)
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.secondary)
-                .clickable { onEventSent(HomeContract.Event.SelectDepartment) },
+                .clickable { onNavigationRequested(HomeContract.Effect.Navigation.ToDepartmentInfoScreen((0..10).random().toLong())) },
             contentAlignment = Alignment.Center
         ) {
             Text("Home")

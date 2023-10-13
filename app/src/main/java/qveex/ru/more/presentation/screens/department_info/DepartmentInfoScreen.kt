@@ -59,7 +59,7 @@ fun DepartmentInfoScreen(
                 .clickable { onEventSent(DepartmentInfoContract.Event.Click) },
             contentAlignment = Alignment.Center
         ) {
-            Text("Departments")
+            Text("Departments ${state.department}")
         }
     }
 }

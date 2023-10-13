@@ -28,7 +28,7 @@ fun MainScreen() {
 
     Scaffold(
         topBar = { },
-        bottomBar = { BottomNav(navController) }
+        //bottomBar = { BottomNav(navController) }
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
             SetupNavHost(navController = navController)

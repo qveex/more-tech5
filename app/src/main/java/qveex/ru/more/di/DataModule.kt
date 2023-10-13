@@ -21,6 +21,8 @@ import qveex.ru.more.data.remote.Api
 @InstallIn(SingletonComponent::class)
 object DataModule {
 
+    private val json = Json { ignoreUnknownKeys = true }
+
     @Provides
     @Singleton
     fun provideHttpClient() =
@@ -36,7 +38,7 @@ object DataModule {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)
-            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .build()
 
     @Provides

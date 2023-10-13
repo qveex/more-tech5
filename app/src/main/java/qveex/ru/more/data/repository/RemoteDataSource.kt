@@ -13,6 +13,20 @@ class RemoteDataSource @Inject constructor(
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    suspend fun get() = scope.async { api.get() }.await()
+    suspend fun getAtmInfo(atmId: Long) =
+        scope.async { api.getAtmInfo(atmId) }.await()
+    suspend fun getDepartmentInfo(departmentId: Long) =
+        scope.async { api.getDepartmentInfo(departmentId) }.await()
+    suspend fun getDepartmentsAndAtmsAround(
+        latitude: Double,
+        longitude: Double,
+        radius: Double
+    ) = scope.async {
+        api.getDepartmentsAndAtmsAround(
+            latitude = latitude,
+            longitude = longitude,
+            radius = radius
+        )
+    }.await()
 
 }

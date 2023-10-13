@@ -28,13 +28,20 @@ class HomeViewModel @Inject constructor(
 
     override fun handleEvents(event: HomeContract.Event) {
         when (event) {
-            is HomeContract.Event.SelectDepartment -> selectDepartment()
+            is HomeContract.Event.SelectDepartment -> selectDepartment(event.departmentId)
+            is HomeContract.Event.SelectAtm -> selectAtm(event.atmId)
         }
     }
 
-    private fun selectDepartment() {
+    private fun selectDepartment(departmentId: Long) {
         setEffect {
-            HomeContract.Effect.Success("Click")
+            HomeContract.Effect.Success("$departmentId")
+        }
+    }
+
+    private fun selectAtm(atmId: Long) {
+        setEffect {
+            HomeContract.Effect.Success("$atmId")
         }
     }
 }

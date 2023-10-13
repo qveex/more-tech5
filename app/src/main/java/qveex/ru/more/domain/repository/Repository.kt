@@ -7,6 +7,17 @@ class Repository @Inject constructor(
     private val remote: RemoteDataSource
 ) {
 
-    suspend fun get() = remote.get()
+    suspend fun getAtmInfo(atmId: Long) = remote.getAtmInfo(atmId)
+    suspend fun getDepartmentInfo(departmentId: Long) = remote.getDepartmentInfo(departmentId)
+
+    suspend fun getDepartmentsAndAtmsAround(
+        latitude: Double,
+        longitude: Double,
+        radius: Double
+    ) = remote.getDepartmentsAndAtmsAround(
+        latitude,
+        longitude,
+        radius
+    )
 
 }

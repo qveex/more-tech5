@@ -7,7 +7,8 @@ import qveex.ru.more.presentation.base.ViewState
 class HomeContract {
 
     sealed class Event : ViewEvent {
-        data object SelectDepartment: Event()
+        data class SelectDepartment(val departmentId: Long): Event()
+        data class SelectAtm(val atmId: Long): Event()
     }
 
     data class State(
@@ -20,7 +21,7 @@ class HomeContract {
         data class Success(val success: String): Effect()
 
         sealed class Navigation : Effect() {
-            data object ToDepartmentInfoScreen : Navigation()
+            data class ToDepartmentInfoScreen(val id: Long) : Navigation()
         }
     }
 }

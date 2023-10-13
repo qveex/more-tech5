@@ -8,7 +8,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import qveex.ru.more.presentation.navigation.paths.departmentsNav
+import qveex.ru.more.presentation.navigation.paths.departmentInfoNav
 import qveex.ru.more.presentation.navigation.paths.homeNav
 import qveex.ru.more.presentation.navigation.paths.onboardingNav
 import qveex.ru.more.utils.Constants.SCREEN_TRANSIT_DURATION_MILLIS
@@ -23,7 +23,7 @@ fun SetupNavHost(navController: NavHostController) {
     ) {
         onboardingNav(navController)
         homeNav(navController)
-        departmentsNav(navController)
+        departmentInfoNav(navController)
     }
 }
 

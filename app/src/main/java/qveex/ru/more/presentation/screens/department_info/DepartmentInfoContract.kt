@@ -11,7 +11,8 @@ class DepartmentInfoContract {
     }
 
     data class State(
-        val isLoading: Boolean = false
+        val isLoading: Boolean = false,
+        val department: String = ""
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {

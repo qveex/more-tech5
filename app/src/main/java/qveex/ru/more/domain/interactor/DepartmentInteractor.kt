@@ -6,6 +6,6 @@ class DepartmentInteractor(
     private val repo: Repository
 ) {
 
-
+    suspend fun getInfo(id: Long) = repo.getDepartmentInfo(id)
 
 }
