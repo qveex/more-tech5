@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlinx-serialization")
+    id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
 }
 
