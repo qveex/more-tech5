@@ -69,6 +69,11 @@ dependencies {
     // serialization
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
+    //theme
+    val accompanistVersion = "0.31.0-alpha"
+    implementation("com.google.accompanist:accompanist-systemuicontroller:$accompanistVersion")
+    implementation("com.google.accompanist:accompanist-navigation-animation:$accompanistVersion")
+
     // navigation
     implementation("androidx.navigation:navigation-compose:2.7.4")
     implementation("com.google.accompanist:accompanist-navigation-animation:0.31.0-alpha")

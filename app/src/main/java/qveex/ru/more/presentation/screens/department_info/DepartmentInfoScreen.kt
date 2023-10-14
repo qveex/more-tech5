@@ -173,7 +173,7 @@ private fun DepartmentInfoTopBar(
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            //containerColor = MaterialTheme.colorScheme.secondary,
+            containerColor = MaterialTheme.colorScheme.background,
             //navigationIconContentColor = MaterialTheme.colorScheme.surface,
             //titleContentColor = MaterialTheme.colorScheme.surface,
         )
