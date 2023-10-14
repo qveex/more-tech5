@@ -8,6 +8,8 @@ plugins {
     id("com.google.devtools.ksp")
 }
 val key: String = gradleLocalProperties(rootDir).getProperty("MAPKIT_API_KEY")
+val releaseStorePassword: String = gradleLocalProperties(rootDir).getProperty("RELEASE_STORE_PASSWORD")
+val releaseKeyPassword: String = gradleLocalProperties(rootDir).getProperty("RELEASE_KEY_PASSWORD")
 
 android {
     namespace = "qveex.ru.more"
@@ -26,18 +28,26 @@ android {
         }
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file("../more_tech.jks")
+            storePassword = releaseStorePassword
+            keyAlias = "release"
+            keyPassword = releaseKeyPassword
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "MAPKIT_API_KEY", key)
-
+            signingConfig = signingConfigs.getByName("release")
         }
-        debug {
-            buildConfigField("String", "MAPKIT_API_KEY", key)
+        buildTypes.forEach {
+            it.buildConfigField("String", "MAPKIT_API_KEY", key)
         }
     }
     compileOptions {
