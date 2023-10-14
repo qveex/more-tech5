@@ -21,13 +21,17 @@ import qveex.ru.more.data.models.OpenHours
 
 @Composable
 fun DayInWeekItem(
+    curDay: Days,
     days: Entity
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        val isWeekend = days.day in listOf(Days.SATURDAY, Days.SUNDAY)
-        val cardColor =
-            if (isWeekend) Color.Red.copy(alpha = .25f)
-            else MaterialTheme.colorScheme.surfaceVariant
+        val (cardColor, textColor) = when (days.day) {
+            curDay -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
+            Days.SATURDAY,
+            Days.SUNDAY -> Color.Red.copy(alpha = .25f) to Color.Unspecified
+            else -> MaterialTheme.colorScheme.surfaceVariant to Color.Unspecified
+        }
+
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
@@ -49,7 +53,8 @@ fun DayInWeekItem(
 @Composable
 private fun DayInWeekItemPreview() {
     DayInWeekItem(
-        Entity(
+        curDay = Days.FRIDAY,
+        days = Entity(
             day = Days.MONDAY,
             openHours = OpenHours("9:00", "22:00")
         )
@@ -60,7 +65,8 @@ private fun DayInWeekItemPreview() {
 @Composable
 private fun DayInWeekItemPreview2() {
     DayInWeekItem(
-        Entity(
+        curDay = Days.SATURDAY,
+        days = Entity(
             day = Days.SATURDAY,
             openHours = OpenHours("9:00", "22:00")
         )

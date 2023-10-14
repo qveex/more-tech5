@@ -74,7 +74,7 @@ fun HomeScreen(
     val sheetState = rememberModalBottomSheetState()
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }, floatingActionButton = {
         val size = 64.dp
-        val radius = 16.dp.takeIf { state.showBottomSheet } ?: (size / 2f)
+        val radius = 16.dp.takeUnless { state.showBottomSheet } ?: (size / 2f)
         val cornerRadius = animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
         ExtendedFloatingActionButton(modifier = Modifier.size(size),
             shape = RoundedCornerShape(cornerRadius.value),

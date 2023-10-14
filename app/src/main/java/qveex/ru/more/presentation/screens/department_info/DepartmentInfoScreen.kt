@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -34,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -85,9 +87,18 @@ fun DepartmentInfoScreen(
     ) { padding ->
         Column(
             modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            0f to MaterialTheme.colorScheme.primaryContainer,
+                            0.5f to MaterialTheme.colorScheme.background
+                        )
+                    )
+                )
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterVertically),
+            verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
             //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             state.department?.let { department ->
@@ -128,10 +139,12 @@ fun DepartmentInfoScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     department.individual.forEach {
-                        DayInWeekItem(days = it)
+                        DayInWeekItem(curDay = state.curDay, days = it)
                     }
                 }
+                // график
 
+                Text(text = "")
                 department.hasRamp.takeIf { it }?.let { hasRamp ->
                     Spacer(modifier = Modifier.padding(2.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -173,7 +186,7 @@ private fun DepartmentInfoTopBar(
             }
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.background,
+            containerColor = Color.Transparent//MaterialTheme.colorScheme.background,
             //navigationIconContentColor = MaterialTheme.colorScheme.surface,
             //titleContentColor = MaterialTheme.colorScheme.surface,
         )

@@ -1,5 +1,6 @@
 package qveex.ru.more.presentation.screens.department_info
 
+import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
@@ -13,6 +14,7 @@ class DepartmentInfoContract {
 
     data class State(
         val isLoading: Boolean = false,
+        val curDay: Days = Days.MONDAY,
         val department: Department? = null
     ) : ViewState
 
