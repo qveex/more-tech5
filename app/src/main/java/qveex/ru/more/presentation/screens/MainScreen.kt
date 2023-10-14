@@ -18,8 +18,7 @@ import qveex.ru.more.presentation.navigation.SetupNavHost
 
 @OptIn(
     ExperimentalFoundationApi::class,
-    ExperimentalAnimationApi::class,
-    ExperimentalMaterial3Api::class
+    ExperimentalAnimationApi::class
 )
 @Composable
 fun MainScreen() {
