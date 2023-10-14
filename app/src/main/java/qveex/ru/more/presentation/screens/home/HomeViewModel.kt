@@ -64,7 +64,12 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeContract.Event.SelectDepartment -> selectDepartment(event.departmentId)
             is HomeContract.Event.SelectAtm -> selectAtm(event.atmId)
+            is HomeContract.Event.ShowBottomSheet -> showBottomSheet(event.show)
         }
+    }
+
+    private fun showBottomSheet(show: Boolean) = setState {
+        copy(showBottomSheet = show)
     }
 
     private fun selectDepartment(departmentId: Long) {
@@ -80,19 +85,19 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun Department.toUi() = AtmDepartment(
+        id = departmentId,
         address = address,
         metro = metroStation,
         distance = 123, // todo посчитать расстояние от местонахождения пользователя
         location = location,
         type = InfrastructureType.DEPARTMENT,
         status = status,
-        openAt = individual.find { it.day == curDay }?.openHours?.from
-            ?: resProvider.getString(R.string.title_closed),
-        closeAt = individual.find { it.day == curDay }?.openHours?.to
-            ?: resProvider.getString(R.string.title_open),
+        openAt = individual.find { it.day == curDay }?.openHours?.from,
+        closeAt = individual.find { it.day == curDay }?.openHours?.to,
     )
 
     private fun Atm.toUi() = AtmDepartment(
+        id = atmId,
         address = address,
         metro = metroStation,
         distance = 123, // todo посчитать расстояние от местонахождения пользователя
@@ -103,6 +108,7 @@ class HomeViewModel @Inject constructor(
 }
 
 data class AtmDepartment(
+    val id: Long,
     val address: String,
     val metro: String,
     val distance: Int,

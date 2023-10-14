@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">5Heads</string>
 
-    <string name="title_home">Home</string>
-    <string name="title_info">Info</string>
-    <string name="title_departments">Departments</string>
-    <string name="title_closed">Closed</string>
-    <string name="title_open">Open</string>
+    <string name="title_home">Главная</string>
+    <string name="title_info">Информация</string>
+    <string name="title_departments">Отделения</string>
+    <string name="title_closed">Закрыто</string>
+    <string name="title_open">Открыто</string>
+    <string name="title_empty_departments_atms_list">Не нашлось подходящих вариантов</string>
+
+    <string name="close_at">Закроется в %s</string>
+    <string name="open_at">Откроетя в %s</string>
+    <string name="before">до %s</string>
+    <string name="meters">%sм</string>
+
 </resources>

@@ -9,10 +9,12 @@ class HomeContract {
     sealed class Event : ViewEvent {
         data class SelectDepartment(val departmentId: Long): Event()
         data class SelectAtm(val atmId: Long): Event()
+        data class ShowBottomSheet(val show: Boolean): Event()
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val showBottomSheet: Boolean = false,
         val atmsAndDepartments: List<AtmDepartment> = emptyList()
     ) : ViewState
 
