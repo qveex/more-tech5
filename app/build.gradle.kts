@@ -33,6 +33,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "MAPKIT_API_KEY", key)
+
         }
         debug {
             buildConfigField("String", "MAPKIT_API_KEY", key)
