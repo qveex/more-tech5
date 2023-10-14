@@ -34,6 +34,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
+import qveex.ru.more.presentation.components.Map
+import qveex.ru.more.presentation.components.MapZoomButtons
 import qveex.ru.more.presentation.screens.home.components.AtmDepartmentList
 import qveex.ru.more.presentation.screens.snack
 
@@ -55,8 +57,18 @@ fun HomeScreen(
         Log.i(TAG, "Home Screen Launched")
         effectFlow?.onEach { effect ->
             when (effect) {
-                is HomeContract.Effect.Error -> snack(coroutineScope, snackbarHostState, effect.error)
-                is HomeContract.Effect.Success -> snack(coroutineScope, snackbarHostState, effect.success)
+                is HomeContract.Effect.Error -> snack(
+                    coroutineScope,
+                    snackbarHostState,
+                    effect.error
+                )
+
+                is HomeContract.Effect.Success -> snack(
+                    coroutineScope,
+                    snackbarHostState,
+                    effect.success
+                )
+
                 is HomeContract.Effect.Navigation -> onNavigationRequested(effect)
             }
         }?.collect()
@@ -68,7 +80,8 @@ fun HomeScreen(
         floatingActionButton = {
             val size = 64.dp
             val radius = 16.dp.takeIf { state.showBottomSheet } ?: (size / 2f)
-            val cornerRadius = animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
+            val cornerRadius =
+                animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
             ExtendedFloatingActionButton(
                 modifier = Modifier.size(size),
                 shape = RoundedCornerShape(cornerRadius.value),
@@ -108,9 +121,12 @@ fun HomeScreen(
                         )
                     )
                 },
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.CenterEnd,
         ) {
-            Text("Home")
+            Map()
+            MapZoomButtons(plusZoomOnClickListener = { /*TODO*/ }) {
+                
+            }
         }
     }
 
