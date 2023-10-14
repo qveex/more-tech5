@@ -1,5 +1,6 @@
 package qveex.ru.more.presentation.screens.home
 
+import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
@@ -17,6 +18,7 @@ class HomeContract {
         data object PlusZoom : Event()
         data object MinusZoom : Event()
 
+        data class AddPlace(val latitude: Float, val longitude: Float) : Event()
         data object FindCurrentLocation : Event()
     }
 
@@ -24,7 +26,8 @@ class HomeContract {
         val isLoading: Boolean = false,
         val isAnimation: Boolean = false,
         val showBottomSheet: Boolean = false,
-        val atmsAndDepartments: List<AtmDepartment> = emptyList()
+        val atmsAndDepartments: List<AtmDepartment> = emptyList(),
+        val points: List<Point> = emptyList()
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {

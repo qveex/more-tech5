@@ -25,7 +25,7 @@ class HomeInteractor(
                 metroStation = "Сенная площадь",
                 allDay = true,
                 distance = 123,
-                coordinates = Location(.0, .0),
+                coordinates = Location(59.929560, 30.296671),
                 services = emptyList(),
             )
         ),
@@ -37,7 +37,7 @@ class HomeInteractor(
                 status = Status.CLOSED,
                 distance = 123,
                 workload = 50,
-                coordinates = Location(.0, .0),
+                coordinates = Location(59.930182, 30.362152 ),
                 hasRamp = true,
                 withVIP = true,
                 legal = listOf(

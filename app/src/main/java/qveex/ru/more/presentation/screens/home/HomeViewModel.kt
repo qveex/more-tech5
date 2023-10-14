@@ -1,10 +1,7 @@
 package qveex.ru.more.presentation.screens.home
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
@@ -12,10 +9,13 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.IconStyle
+import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import qveex.ru.more.R
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
@@ -53,6 +53,7 @@ class HomeViewModel @Inject constructor(
         else -> Days.MONDAY
     }
     private lateinit var mapView: MapView
+    private lateinit var mapObjectCollection: MapObjectCollection
 
     init {
         viewModelScope.launch {
@@ -60,13 +61,27 @@ class HomeViewModel @Inject constructor(
                 leftTopCoordinate = Location(.0, .0),
                 rightBottomCoordinate = Location(.0, .0)
             )
+
             setState {
                 copy(
+                    points = with(objects) {
+                        atms.map { Point(it.coordinates.latitude, it.coordinates.longitude) } +
+                                departments.map {
+                                    Point(
+                                        it.coordinates.latitude,
+                                        it.coordinates.longitude
+                                    )
+                                }
+                    },
                     atmsAndDepartments = with(objects) {
-                        atms.map { it.toUi() } +
-                                departments.map { it.toUi() }
+                        atms.map {
+                            it.toUi()
+                        } + departments.map {
+                            it.toUi()
+                        }
                     }.sortedBy { it.distance }
                 )
+
             }
         }
     }
@@ -85,9 +100,11 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.PlusZoom -> setZoom(1f)
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
+                mapObjectCollection = mapView.mapWindow.map.mapObjects.addCollection()
+
                 val fusedLocationClient =
                     LocationServices.getFusedLocationProviderClient(mapView.context)
-                val location = fusedLocationClient.lastLocation.addOnCompleteListener {location ->
+                fusedLocationClient.lastLocation.addOnCompleteListener { location ->
                     mapView.mapWindow.map.move(
                         CameraPosition(
                             Point(location.result.latitude, location.result.longitude),
@@ -96,11 +113,14 @@ class HomeViewModel @Inject constructor(
                             0.0f
                         )
                     )
-
                 }
+            }
 
-
-
+            is HomeContract.Event.AddPlace -> {
+                addPlace(
+                    event.latitude.toDouble(),
+                    event.longitude.toDouble()
+                )
             }
 
             is HomeContract.Event.FindCurrentLocation -> {
@@ -150,6 +170,9 @@ class HomeViewModel @Inject constructor(
     private fun onStart() {
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
+        viewState.value.points.forEach {
+            addPlace(it.latitude, it.longitude)
+        }
     }
 
     private fun onStop() {
@@ -194,6 +217,16 @@ class HomeViewModel @Inject constructor(
         type = InfrastructureType.ATM,
         status = Status.OPEN
     )
+
+    private fun addPlace(latitude: Double, longitude: Double) {
+        val point = Point(latitude, longitude)
+        val mapObject = mapObjectCollection.addPlacemark().apply {
+            geometry = point
+            setIcon(ImageProvider.fromResource(mapView.context, R.drawable.ic_atm))
+        }
+
+        mapObject.zIndex = 100.0f
+    }
 }
 
 data class AtmDepartment(
