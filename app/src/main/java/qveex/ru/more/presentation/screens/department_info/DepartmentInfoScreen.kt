@@ -1,7 +1,9 @@
 package qveex.ru.more.presentation.screens.department_info
 
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,6 +50,7 @@ import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.R
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.presentation.components.EmptyContent
+import qveex.ru.more.presentation.components.Map
 import qveex.ru.more.presentation.screens.department_info.components.DayInWeekItem
 import qveex.ru.more.presentation.screens.snack
 
@@ -66,8 +71,18 @@ fun DepartmentInfoScreen(
         Log.i(TAG, "Department Info Screen Launched")
         effectFlow?.onEach { effect ->
             when (effect) {
-                is DepartmentInfoContract.Effect.Error -> snack(coroutineScope, snackbarHostState, effect.error)
-                is DepartmentInfoContract.Effect.Success -> snack(coroutineScope, snackbarHostState, effect.success)
+                is DepartmentInfoContract.Effect.Error -> snack(
+                    coroutineScope,
+                    snackbarHostState,
+                    effect.error
+                )
+
+                is DepartmentInfoContract.Effect.Success -> snack(
+                    coroutineScope,
+                    snackbarHostState,
+                    effect.success
+                )
+
                 is DepartmentInfoContract.Effect.Navigation -> onNavigationRequested(effect)
             }
         }?.collect()
@@ -102,37 +117,39 @@ fun DepartmentInfoScreen(
             //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             state.department?.let { department ->
-                Text(
-                    text = stringResource(id = R.string.title_address),
-                    style = MaterialTheme.typography.headlineSmall
+                Map(
+                    onEventSent = { },
+                    Modifier
+                        .fillMaxWidth()
+                        .height(256.dp)
+                        .clip(RoundedCornerShape(8.dp))
                 )
-                Text(
-                    text = department.address,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Text(
-                    text = department.metroStation,
-                    style = MaterialTheme.typography.titleLarge
-                )
-                Spacer(modifier = Modifier.padding(4.dp))
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.title_address),
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                    Text(
+                        text = department.address,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Text(
+                        text = department.metroStation,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
                 val isOpen = department.status == Status.OPEN
                 val statusColor = if (isOpen) Color.Green else Color.Red
-                val statusText = stringResource(id =
+                val statusText = stringResource(
+                    id =
                     if (isOpen) R.string.title_open
                     else R.string.title_closed
                 )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(shape = RoundedCornerShape(12.dp))
-                        .background(statusColor.copy(alpha = .175f)),
-                ) {
-                    Text(
-                        modifier = Modifier.padding(22.dp),
-                        text = statusText,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                }
+                Text(
+                    modifier = Modifier.padding(22.dp),
+                    text = statusText,
+                    style = MaterialTheme.typography.headlineSmall
+                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -142,7 +159,7 @@ fun DepartmentInfoScreen(
                         DayInWeekItem(curDay = state.curDay, days = it)
                     }
                 }
-                // график
+
 
                 Text(text = "")
                 department.hasRamp.takeIf { it }?.let { hasRamp ->
@@ -157,7 +174,17 @@ fun DepartmentInfoScreen(
                         Text(text = stringResource(id = R.string.title_has_ramp))
                     }
                 }
-                
+                department.withVIP.takeIf { it }?.let {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Image(
+                            modifier = Modifier.size(32.dp),
+                            painter = painterResource(id = R.drawable.ic_vtb_logo),
+                            contentDescription = "Schumacher icon"
+                        )
+                        Spacer(modifier = Modifier.padding(4.dp))
+                        Text(text = stringResource(id = R.string.title_with_vip))
+                    }
+                }
             } ?: EmptyContent(message = "")
         }
     }

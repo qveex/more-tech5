@@ -16,7 +16,8 @@ import qveex.ru.more.presentation.screens.home.HomeContract
 
 @Composable
 fun Map(
-    onEventSent: (event: HomeContract.Event) -> Unit
+    onEventSent: (event: HomeContract.Event) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     DisposableEffect(lifecycleOwner) {
@@ -40,5 +41,5 @@ fun Map(
             it.map.isNightModeEnabled = isSystemInDarkTheme
             onEventSent(HomeContract.Event.SetMapView(it))
         }
-    }, modifier = Modifier.fillMaxSize())
+    }, modifier = modifier)
 }
