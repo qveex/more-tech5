@@ -65,9 +65,10 @@ fun AtmDepartmentItem(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.TravelExplore,
-                        contentDescription = "Nearest metro"
+                        contentDescription = "Nearest subway",
+                        modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.size(6.dp))
+                    Spacer(modifier = Modifier.size(4.dp))
                     Text(text = atmDepartment.metro, style = MaterialTheme.typography.bodyMedium)
                 }
 
