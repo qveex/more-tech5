@@ -8,6 +8,7 @@ import qveex.ru.more.domain.interactor.DepartmentInteractor
 import qveex.ru.more.domain.interactor.HomeInteractor
 import qveex.ru.more.domain.interactor.Interactors
 import qveex.ru.more.domain.interactor.OnboardingInteractor
+import qveex.ru.more.domain.interactor.StartInteractor
 import qveex.ru.more.domain.repository.Repository
 import javax.inject.Singleton
 
@@ -20,7 +21,8 @@ object DomainModule {
     fun provideInteractors(repository: Repository) = Interactors(
         homeInteractor = HomeInteractor(repository),
         departmentInteractor = DepartmentInteractor(repository),
-        onboardingInteractor = OnboardingInteractor(repository)
+        onboardingInteractor = OnboardingInteractor(repository),
+        startInteractor = StartInteractor(repository)
     )
 
     @Provides
@@ -32,4 +34,7 @@ object DomainModule {
     @Provides
     fun provideOnboardingInteractor(interactors: Interactors) = interactors.onboardingInteractor
 
+
+    @Provides
+    fun provideStartInteractor(interactors: Interactors) = interactors.startInteractor
 }

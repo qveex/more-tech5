@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class StartFilter(
     val id: Int,
     val name: String,
-    val checked: MutableState<Boolean>
+    val checked: Boolean
 )

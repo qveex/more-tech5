@@ -34,6 +34,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -178,11 +179,11 @@ fun StartScreen(
                     items(filterList) { item ->
                         Row(modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { }
+                            .clickable { onEventSent(StartContract.Event.CheckFilter(item.id)) }
                             .padding(horizontal = 16.dp, 8.dp)) {
                             Checkbox(
-                                checked = item.checked.value,
-                                onCheckedChange = { checked -> item.checked.value = checked })
+                                checked = item.checked,
+                                onCheckedChange = { onEventSent(StartContract.Event.CheckFilter(item.id)) })
                             Spacer(modifier = Modifier.size(16.dp))
                             Text(text = item.name, style = MaterialTheme.typography.bodyMedium)
                         }
