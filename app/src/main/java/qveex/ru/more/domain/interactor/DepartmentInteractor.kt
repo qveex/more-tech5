@@ -21,6 +21,7 @@ class DepartmentInteractor(
         workload = 50,
         location = Location(.0, .0),
         hasRamp = true,
+        withVIP = true,
         legal = listOf(
             Entity(Days.SATURDAY, OpenHours("9:00", "22:00"))
         ),
