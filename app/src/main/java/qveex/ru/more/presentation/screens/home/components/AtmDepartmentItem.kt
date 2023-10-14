@@ -61,9 +61,12 @@ fun AtmDepartmentItem(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(text = atmDepartment.address, style = MaterialTheme.typography.titleLarge)
-                Row {
-                    Icon(imageVector = Icons.Outlined.TravelExplore, contentDescription = "Nearest metro")
-                    Spacer(modifier = Modifier.padding(6.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.TravelExplore,
+                        contentDescription = "Nearest metro"
+                    )
+                    Spacer(modifier = Modifier.size(6.dp))
                     Text(text = atmDepartment.metro, style = MaterialTheme.typography.bodyMedium)
                 }
 
@@ -108,6 +111,6 @@ fun DepartmentItemPreview() {
             openAt = "9:00",
             closeAt = "22:00"
         ),
-        onDepartmentClick= {}
+        onDepartmentClick = {}
     )
 }
