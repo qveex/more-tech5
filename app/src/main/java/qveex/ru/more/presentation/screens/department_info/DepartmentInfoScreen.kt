@@ -145,11 +145,6 @@ fun DepartmentInfoScreen(
                     if (isOpen) R.string.title_open
                     else R.string.title_closed
                 )
-                Text(
-                    modifier = Modifier.padding(22.dp),
-                    text = statusText,
-                    style = MaterialTheme.typography.headlineSmall
-                )
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -159,11 +154,14 @@ fun DepartmentInfoScreen(
                         DayInWeekItem(curDay = state.curDay, days = it)
                     }
                 }
+                Text(
+                    text = statusText,
+                    style = MaterialTheme.typography.bodyMedium
+                )
 
 
-                Text(text = "")
+
                 department.hasRamp.takeIf { it }?.let { hasRamp ->
-                    Spacer(modifier = Modifier.padding(2.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
                             modifier = Modifier.size(32.dp),
