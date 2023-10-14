@@ -27,6 +27,7 @@ import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.presentation.screens.home.AtmDepartment
+import qveex.ru.more.ui.theme.Moretech5Theme
 import qveex.ru.more.ui.theme.errorColor
 import qveex.ru.more.ui.theme.successColor
 
@@ -99,18 +100,20 @@ fun AtmDepartmentItem(
 @Preview
 @Composable
 fun DepartmentItemPreview() {
-    AtmDepartmentItem(
-        atmDepartment = AtmDepartment(
-            id = 1L,
-            address = "ул. Пушкина д. 3",
-            metro = "Сенная площадь",
-            distance = 123,
-            location = Location(.0, .0),
-            type = InfrastructureType.ATM,
-            status = Status.OPEN,
-            openAt = "9:00",
-            closeAt = "22:00"
-        ),
-        onDepartmentClick = {}
-    )
+    Moretech5Theme {
+        AtmDepartmentItem(
+            atmDepartment = AtmDepartment(
+                id = 1L,
+                address = "ул. Пушкина д. 3",
+                metro = "Сенная площадь",
+                distance = 123,
+                location = Location(.0, .0),
+                type = InfrastructureType.ATM,
+                status = Status.OPEN,
+                openAt = "9:00",
+                closeAt = "22:00"
+            ),
+            onDepartmentClick = {}
+        )
+    }
 }
