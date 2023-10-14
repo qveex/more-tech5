@@ -14,6 +14,7 @@ sealed class Screen(
     @StringRes val title: Int? = null,
     val icon: ImageVector? = null
 ) {
+
     data object Home : Screen("home", R.string.title_home, Icons.Outlined.Home)
     data object Onboarding : Screen("onboarding")
     data object Departments : Screen("departments", R.string.title_departments, Icons.Outlined.List)

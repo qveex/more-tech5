@@ -6,6 +6,8 @@ class OnboardingInteractor(
     private val repo: Repository
 ) {
 
-
+    suspend fun getFilters(){
+        
+    }
 
 }
