@@ -61,7 +61,7 @@ fun AtmDepartmentItem(
                 modifier = Modifier.weight(7f),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = atmDepartment.address, style = MaterialTheme.typography.titleLarge)
+                Text(text = atmDepartment.address, style = MaterialTheme.typography.bodyLarge)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = Icons.Outlined.TravelExplore,
@@ -69,7 +69,7 @@ fun AtmDepartmentItem(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.size(4.dp))
-                    Text(text = atmDepartment.metro, style = MaterialTheme.typography.bodyMedium)
+                    Text(text = atmDepartment.metro, style = MaterialTheme.typography.bodySmall)
                 }
 
                 val isOpen = atmDepartment.status == Status.OPEN
