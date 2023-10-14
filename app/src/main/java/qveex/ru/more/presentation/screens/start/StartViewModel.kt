@@ -21,12 +21,16 @@ class StartViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            setState { copy(isFilters = true) }
-            val filters = interactor.getFilters()
+            setState { copy(isFiltersLoading = true) }
+            val departmentFilters = interactor.getDepartmentFilters()
+            val clientFilters = interactor.getClientFilters()
             setState {
                 copy(
-                    isFilters = false,
-                    filters = filters.map {
+                    isFiltersLoading = false,
+                    departmentFilters = departmentFilters.map {
+                        StartFilter(it.id, it.name, false)
+                    },
+                    clientFilters = clientFilters.map {
                         StartFilter(it.id, it.name, false)
                     }
                 )
@@ -41,16 +45,30 @@ class StartViewModel @Inject constructor(
     override fun handleEvents(event: StartContract.Event) {
         when (event) {
             is StartContract.Event.FindAtmsAndDepartments -> find()
-            is StartContract.Event.CheckFilter -> checkItem(event.id)
+            is StartContract.Event.SelectClientFilter -> selectClientFilter(event.id)
+            is StartContract.Event.SelectDepartmentFilter -> selectDepartmentFilter(event.id)
             is StartContract.Event.CheckServiceFilter -> checkServiceFilters(event.buttonId, event.ids)
         }
     }
 
-    private fun checkItem(id: Long) {
+    private fun selectClientFilter(id: Long) {
         setState {
-            val filter = filters.firstOrNull { it.id == id } ?: return@setState this
+            val filter = clientFilters.firstOrNull { it.id == id } ?: return@setState this
             copy(
-                filters = filters.replace(
+                clientFilters = clientFilters.replace(
+                    filter.copy(checked = !filter.checked)
+                ) {
+                    it.id == filter.id
+                }
+            )
+        }
+    }
+
+    private fun selectDepartmentFilter(id: Long) {
+        setState {
+            val filter = departmentFilters.firstOrNull { it.id == id } ?: return@setState this
+            copy(
+                clientFilters = departmentFilters.replace(
                     filter.copy(checked = !filter.checked)
                 ) {
                     it.id == filter.id
@@ -71,6 +89,7 @@ class StartViewModel @Inject constructor(
             interactor.findInfo()
             setState { copy(isLoading = false) }
         }
+        setEffect { StartContract.Effect.Navigation.ToHomeScreen }
     }
 
 }

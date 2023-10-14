@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -160,34 +159,43 @@ fun StartScreen(
                 style = MaterialTheme.typography.titleLarge
             )
             Card(modifier = Modifier.padding(bottom = 72.dp)) {
-                if (state.isFilters) {
+                if (state.isFiltersLoading) {
                     AppLoading()
                 } else {
                     LazyColumn(
                         modifier = Modifier.padding(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        items(state.filters) { filter ->
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable { onEventSent(StartContract.Event.CheckFilter(filter.id)) },
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Checkbox(
-                                    checked = filter.checked,
-                                    onCheckedChange = {
-                                        onEventSent(StartContract.Event.CheckFilter(filter.id))
-                                    }
-                                )
-                                Spacer(modifier = Modifier.size(16.dp))
-                                Text(text = filter.name, style = MaterialTheme.typography.bodyLarge)
-                            }
+                        items(state.clientFilters) { filter ->
+                            FilterRow(filter = filter, onClickListener = { onEventSent(StartContract.Event.SelectClientFilter(it)) })
+                        }
+                        items(state.departmentFilters) { filter ->
+                            FilterRow(filter = filter, onClickListener = { onEventSent(StartContract.Event.SelectDepartmentFilter(it)) })
                         }
                     }
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun FilterRow(
+    filter: StartFilter,
+    onClickListener: (id: Long) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClickListener(filter.id) },
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Checkbox(
+            checked = filter.checked,
+            onCheckedChange = { onClickListener(filter.id) }
+        )
+        Spacer(modifier = Modifier.size(16.dp))
+        Text(text = filter.name, style = MaterialTheme.typography.bodyLarge)
     }
 }
 

@@ -31,7 +31,8 @@ fun NavGraphBuilder.startNav(navController: NavController) {
             onNavigationRequested = {
                 navController.safeNavigate(
                     when (it) {
-                        is StartContract.Effect.Navigation.ToInfoScreen -> Screen.Home.route
+                        is StartContract.Effect.Navigation.ToHomeScreen -> Screen.Home.route
+                        is StartContract.Effect.Navigation.ToInfoScreen -> Screen.DepartmentInfo.pasParam(it.id)
                     }
                 )
             }

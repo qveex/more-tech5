@@ -10,10 +10,9 @@ class StartInteractor(
     private val repo: Repository
 ) {
 
-    suspend fun getFilters(): List<Filter> =
-        //repo.getServicesFilters().also { Log.i("StartInteractor", it.toString()) } +
-                repo.getClientsFilters() +
-                repo.getOfficesFilters()
+    suspend fun getDepartmentFilters() = repo.getOfficesFilters()
+
+    suspend fun getClientFilters() = repo.getClientsFilters()
 
     suspend fun findInfo() {}/*: Info = repo.getDepartmentsAndAtmsAround(
         requestFilter = RequestFilter(

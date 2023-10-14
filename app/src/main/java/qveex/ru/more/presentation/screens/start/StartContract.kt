@@ -9,15 +9,17 @@ class StartContract {
     sealed class Event : ViewEvent {
         data object FindAtmsAndDepartments : Event()
 
-        data class CheckFilter(val id: Long) : Event()
+        data class SelectClientFilter(val id: Long) : Event()
+        data class SelectDepartmentFilter(val id: Long) : Event()
         data class CheckServiceFilter(val buttonId: Long, val ids: List<Long>) : Event()
     }
 
     data class State(
         val isLoading: Boolean = false,
-        val isFilters: Boolean = false,
+        val isFiltersLoading: Boolean = false,
         val selectedService: Long = -1,
-        val filters: List<StartFilter> = emptyList()
+        val departmentFilters: List<StartFilter> = emptyList(),
+        val clientFilters: List<StartFilter> = emptyList()
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {
@@ -26,7 +28,8 @@ class StartContract {
         data class Success(val success: String) : Effect()
 
         sealed class Navigation : Effect() {
-            data object ToInfoScreen : Navigation()
+            data class ToInfoScreen(val id: Long) : Navigation()
+            data object ToHomeScreen : Navigation()
         }
     }
 }
