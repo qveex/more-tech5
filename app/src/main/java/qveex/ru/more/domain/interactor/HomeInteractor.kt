@@ -41,10 +41,12 @@ class HomeInteractor(
                 hasRamp = true,
                 withVIP = true,
                 legal = listOf(
-                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00"))
+                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00")),
+                    Entity(Days.SUNDAY, OpenHours("9:00", "22:00"))
                 ),
                 individual = listOf(
-                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00"))
+                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00")),
+                    Entity(Days.SUNDAY, OpenHours("9:00", "22:00"))
                 ),
             )
         )
