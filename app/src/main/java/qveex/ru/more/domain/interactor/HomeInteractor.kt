@@ -34,7 +34,7 @@ class HomeInteractor(
                 departmentId = 1,
                 address = "ул. Пушкина д. 3",
                 metroStation = "Сенная площадь",
-                status = Status.OPEN,
+                status = Status.CLOSED,
                 distance = 123,
                 workload = 50,
                 location = Location(.0, .0),

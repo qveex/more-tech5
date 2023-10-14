@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -80,12 +81,14 @@ fun HomeScreen(
             }
         }
     ) {
+
         if (state.showBottomSheet) {
             ModalBottomSheet(
                 onDismissRequest = { onEventSent(HomeContract.Event.ShowBottomSheet(false)) },
                 sheetState = sheetState
             ) {
                 AtmDepartmentList(state.atmsAndDepartments) {
+                    onEventSent(HomeContract.Event.ShowBottomSheet(false))
                     onNavigationRequested(HomeContract.Effect.Navigation.ToDepartmentInfoScreen(it.id))
                 }
             }

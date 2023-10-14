@@ -25,7 +25,13 @@ class DepartmentInteractor(
             Entity(Days.SATURDAY, OpenHours("9:00", "22:00"))
         ),
         individual = listOf(
-            Entity(Days.SATURDAY, OpenHours("9:00", "22:00"))
+            Entity(Days.MONDAY, OpenHours("9:00", "22:00")),
+            Entity(Days.TUESDAY, OpenHours("9:00", "22:00")),
+            Entity(Days.WEDNESDAY, OpenHours("9:00", "22:00")),
+            Entity(Days.THURSDAY, OpenHours("9:00", "22:00")),
+            Entity(Days.FRIDAY, OpenHours("9:00", "22:00")),
+            Entity(Days.SATURDAY, OpenHours("11:00", "20:00")),
+            Entity(Days.SUNDAY, OpenHours("12:00", "20:00"))
         ),
     )//repo.getDepartmentInfo(id)
 

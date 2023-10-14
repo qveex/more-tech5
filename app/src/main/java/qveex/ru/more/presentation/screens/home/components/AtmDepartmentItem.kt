@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,6 +27,8 @@ import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.presentation.screens.home.AtmDepartment
+import qveex.ru.more.ui.theme.errorColor
+import qveex.ru.more.ui.theme.successColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,7 +68,7 @@ fun AtmDepartmentItem(
                 }
 
                 val isOpen = atmDepartment.status == Status.OPEN
-                val color = if (isOpen) Color.Green else Color.Red
+                val color = if (isOpen) successColor else errorColor
 
                 val isOpenText = stringResource(
                     id = if (isOpen) R.string.title_open else R.string.title_closed
