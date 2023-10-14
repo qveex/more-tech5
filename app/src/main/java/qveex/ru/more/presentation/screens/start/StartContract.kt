@@ -16,6 +16,7 @@ class StartContract {
     data class State(
         val isLoading: Boolean = false,
         val isFilters: Boolean = false,
+        val selectedService: Long = -1,
         val filters: List<StartFilter> = emptyList()
     ) : ViewState
 

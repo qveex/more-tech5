@@ -34,11 +34,13 @@ class StartViewModel @Inject constructor(
         }
     }
 
+    private var services = emptyList<Long>()
+
     override fun setInitialState() = StartContract.State()
 
     override fun handleEvents(event: StartContract.Event) {
         when (event) {
-            is StartContract.Event.FindAtmsAndDepartments -> {}
+            is StartContract.Event.FindAtmsAndDepartments -> find()
             is StartContract.Event.CheckFilter -> checkItem(event.id)
             is StartContract.Event.CheckServiceFilter -> checkServiceFilters(event.buttonId, event.ids)
         }
@@ -58,7 +60,8 @@ class StartViewModel @Inject constructor(
     }
 
     private fun checkServiceFilters(buttonId: Long, ids: List<Long>) {
-
+        services = ids
+        setState { copy(selectedService = buttonId) }
     }
 
     private fun find() {

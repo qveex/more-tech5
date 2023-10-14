@@ -2,6 +2,7 @@ package qveex.ru.more.presentation.screens.start
 
 import android.util.Log
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -80,7 +82,7 @@ fun StartScreen(
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_show_all),
                 text = stringResource(id = R.string.title_find_departments),
-                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = .65f),
                 onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(2, listOf(1, 2, 3, 4, 5))) }
             ),
             ServiceFilter(
@@ -151,7 +153,7 @@ fun StartScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            StartItemList(services = services)
+            StartItemList(services = services, selectedService = state.selectedService)
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = stringResource(id = R.string.title_additional_filters),
@@ -192,24 +194,26 @@ fun StartScreen(
 @Composable
 private fun StartItemList(
     modifier: Modifier = Modifier,
-    services: List<ServiceFilter>
+    services: List<ServiceFilter>,
+    selectedService: Long
 ) {
     LazyVerticalGrid(
         modifier= modifier,
         columns = GridCells.Fixed(2)
     ) {
-        items(services) {
-            StartItem(filter = it)
+        itemsIndexed(services) { index, it ->
+            StartItem(filter = it, selected = index.toLong() == selectedService)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StartItem(filter: ServiceFilter, ) {
+private fun StartItem(filter: ServiceFilter, selected: Boolean) {
     Card(
         onClick = filter.onClickListener,
         modifier = Modifier.padding(8.dp),
+        border = BorderStroke(2.dp, filter.backgroundColor.copy(alpha = 1f)).takeIf { selected },
         colors = CardDefaults.cardColors(containerColor = filter.backgroundColor)
     ) {
         Column(
