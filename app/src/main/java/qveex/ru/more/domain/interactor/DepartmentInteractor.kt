@@ -19,7 +19,7 @@ class DepartmentInteractor(
         status = Status.OPEN,
         distance = 123,
         workload = 50,
-        location = Location(.0, .0),
+        coordinates = Location(.0, .0),
         hasRamp = true,
         withVIP = true,
         legal = listOf(

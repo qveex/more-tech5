@@ -2,28 +2,38 @@ package qveex.ru.more.data.remote
 
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Department
-import qveex.ru.more.data.models.Location
-import qveex.ru.more.data.models.Objects
+import qveex.ru.more.data.models.Filter
+import qveex.ru.more.data.models.Info
+import qveex.ru.more.data.models.RequestFilter
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 interface Api {
 
-    @GET("api/v1/departments/{departmentId}")
+    @GET("departments/{departmentId}")
     suspend fun getDepartmentInfo(
         @Path("departmentId") departmentId: Long
     ): Department
 
-    @GET("api/v1/atms/{atmId}")
+    @GET("atms/{atmId}")
     suspend fun getAtmInfo(
         @Path("atmId") atmId: Long
     ): Atm
 
-    @GET("api/v1/objects")
+    @POST("list")
     suspend fun getDepartmentsAndAtmsAround(
-        @Query("leftTopCoordinate") leftTopCoordinate : Location,
-        @Query("rightBottomCoordinate") rightBottomCoordinate : Location
-    ): Objects
+        @Body filter: RequestFilter
+    ): Info
+
+    @GET("filter/services")
+    suspend fun getServicesFilters(): List<Filter>
+
+    @GET("filter/clients")
+    suspend fun getClientsFilters(): List<Filter>
+
+    @GET("filter/offices")
+    suspend fun getOfficesFilters(): List<Filter>
 
 }

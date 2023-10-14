@@ -5,7 +5,7 @@ import java.util.Locale
 
 object Constants {
 
-    const val BASE_URL = "https://www.google.com/"
+    const val BASE_URL = "http://45.12.237.22:8080/api/v1/"
 
     const val PREFERENCES_NAME = "5heads_preferences"
 

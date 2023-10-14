@@ -3,7 +3,7 @@ package qveex.ru.more.data.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Objects(
+data class Info(
     val atms: List<Atm>,
     val departments: List<Department>,
 )

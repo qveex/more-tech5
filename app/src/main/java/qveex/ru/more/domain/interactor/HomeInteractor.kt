@@ -5,7 +5,7 @@ import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.Entity
 import qveex.ru.more.data.models.Location
-import qveex.ru.more.data.models.Objects
+import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.OpenHours
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.repository.Repository
@@ -17,7 +17,7 @@ class HomeInteractor(
     suspend fun getDepartmentsAndAtmsAround(
         leftTopCoordinate: Location,
         rightBottomCoordinate: Location
-    ) = Objects(
+    ) = Info(
         atms = listOf(
             Atm(
                 atmId = 1,
@@ -25,7 +25,7 @@ class HomeInteractor(
                 metroStation = "Сенная площадь",
                 allDay = true,
                 distance = 123,
-                location = Location(.0, .0),
+                coordinates = Location(.0, .0),
                 services = emptyList(),
             )
         ),
@@ -37,7 +37,7 @@ class HomeInteractor(
                 status = Status.CLOSED,
                 distance = 123,
                 workload = 50,
-                location = Location(.0, .0),
+                coordinates = Location(.0, .0),
                 hasRamp = true,
                 withVIP = true,
                 legal = listOf(

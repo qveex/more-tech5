@@ -9,6 +9,6 @@ data class Atm(
     val metroStation: String,
     val allDay: Boolean,
     val distance: Int,
-    val location: Location,
+    val coordinates: Location,
     val services: List<Service>
 )
