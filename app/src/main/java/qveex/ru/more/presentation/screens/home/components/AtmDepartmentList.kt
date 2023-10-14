@@ -25,8 +25,7 @@ fun AtmDepartmentList(
             EmptyContent(message = stringResource(id = R.string.title_empty_departments_atms_list))
         } else {
             LazyColumn(
-                contentPadding = PaddingValues(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                modifier = Modifier.padding(vertical = 16.dp)
             ) {
                 items(list) {
                     AtmDepartmentItem(
