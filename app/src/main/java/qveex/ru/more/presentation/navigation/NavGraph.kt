@@ -11,6 +11,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import qveex.ru.more.presentation.navigation.paths.departmentInfoNav
 import qveex.ru.more.presentation.navigation.paths.homeNav
 import qveex.ru.more.presentation.navigation.paths.onboardingNav
+import qveex.ru.more.presentation.navigation.paths.startNav
 import qveex.ru.more.utils.Constants.SCREEN_TRANSIT_DURATION_MILLIS
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -19,11 +20,12 @@ import qveex.ru.more.utils.Constants.SCREEN_TRANSIT_DURATION_MILLIS
 fun SetupNavHost(navController: NavHostController) {
     AnimatedNavHost(
         navController = navController,
-        startDestination = Screen.Home.route
+        startDestination = Screen.Start.route
     ) {
         onboardingNav(navController)
         homeNav(navController)
         departmentInfoNav(navController)
+        startNav(navController)
     }
 }
 
