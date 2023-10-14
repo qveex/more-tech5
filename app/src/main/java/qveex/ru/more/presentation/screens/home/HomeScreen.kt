@@ -54,7 +54,6 @@ fun HomeScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
-
     LaunchedEffect(Unit) {
         Log.i(TAG, "Home Screen Launched")
         effectFlow?.onEach { effect ->
@@ -73,19 +72,21 @@ fun HomeScreen(
     }
 
     val sheetState = rememberModalBottomSheetState()
+
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         floatingActionButton = {
             val size = 64.dp
             val radius = 16.dp.takeUnless { state.showBottomSheet } ?: (size / 2f)
-            val cornerRadius = animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
+            val cornerRadius =
+                animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
             ExtendedFloatingActionButton(modifier = Modifier.size(size),
                 shape = RoundedCornerShape(cornerRadius.value),
                 onClick = { onEventSent(HomeContract.Event.ShowBottomSheet(true)) }) {
-                    Icon(
-                        imageVector = Icons.Outlined.List, contentDescription = "List icon"
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Outlined.List, contentDescription = "List icon"
+                )
+            }
         }
     ) {
 
@@ -115,20 +116,21 @@ fun HomeScreen(
             )
         }
         Box(
-           modifier = Modifier
-               .fillMaxWidth()
-               .background(
-                   Brush.verticalGradient(
-                       colorStops = arrayOf(
-                           0f to MaterialTheme.colorScheme.primaryContainer,
-                           1f to Color.Transparent
-                       )
-                   )
-               )
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        colorStops = arrayOf(
+                            0f to MaterialTheme.colorScheme.primaryContainer,
+                            1f to Color.Transparent
+                        )
+                    )
+                )
         ) {
             MapTopBar()
         }
     }
+
 }
 
 @Composable

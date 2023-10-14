@@ -1,10 +1,13 @@
 package qveex.ru.more.presentation.screens.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.Map
 import com.yandex.mapkit.mapview.MapView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -24,7 +27,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val interactor: HomeInteractor,
     private val resProvider: ResourceProvider
-): BaseViewModel<
+) : BaseViewModel<
         HomeContract.Event,
         HomeContract.State,
         HomeContract.Effect,
@@ -34,14 +37,14 @@ class HomeViewModel @Inject constructor(
         private const val TAG = "HomeViewModel"
     }
 
-    private val curDay = when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-        Calendar.MONDAY    -> Days.MONDAY
-        Calendar.TUESDAY   -> Days.TUESDAY
+    private val curDay = when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
+        Calendar.MONDAY -> Days.MONDAY
+        Calendar.TUESDAY -> Days.TUESDAY
         Calendar.WEDNESDAY -> Days.WEDNESDAY
-        Calendar.THURSDAY  -> Days.THURSDAY
-        Calendar.FRIDAY    -> Days.FRIDAY
-        Calendar.SATURDAY  -> Days.SATURDAY
-        Calendar.SUNDAY    -> Days.SUNDAY
+        Calendar.THURSDAY -> Days.THURSDAY
+        Calendar.FRIDAY -> Days.FRIDAY
+        Calendar.SATURDAY -> Days.SATURDAY
+        Calendar.SUNDAY -> Days.SUNDAY
         else -> Days.MONDAY
     }
     private lateinit var mapView: MapView
@@ -56,7 +59,7 @@ class HomeViewModel @Inject constructor(
                 copy(
                     atmsAndDepartments = with(objects) {
                         atms.map { it.toUi() } +
-                        departments.map { it.toUi() }
+                                departments.map { it.toUi() }
                     }.sortedBy { it.distance }
                 )
             }
@@ -74,7 +77,36 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
-            is HomeContract.Event.SetMapView -> { mapView = event.mapView }
+            is HomeContract.Event.SetMapView -> {
+                mapView = event.mapView
+            }
+
+            is HomeContract.Event.FindCurrentLocation -> {
+                MapKitFactory.initialize(mapView.context)
+                val locationManager = MapKitFactory.getInstance().createLocationManager()
+                locationManager.requestSingleUpdate(object :
+                    com.yandex.mapkit.location.LocationListener {
+                    override fun onLocationStatusUpdated(p0: LocationStatus) {
+                        Log.d("LocationStatus", "No status")
+                    }
+
+                    override fun onLocationUpdated(p0: com.yandex.mapkit.location.Location) {
+                        mapView.mapWindow.map.move(
+                            CameraPosition(
+                                Point(p0.position.latitude, p0.position.longitude),
+                                1.0f,
+                                0.0f,
+                                0.0f
+                            ),
+                            Animation(Animation.Type.SMOOTH, 0.3f),
+                            Map.CameraCallback {
+                                mapView.
+                            }
+                        )
+                    }
+                })
+
+            }
         }
     }
 
@@ -100,6 +132,7 @@ class HomeViewModel @Inject constructor(
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
     }
+
     private fun onStop() {
         MapKitFactory.getInstance().onStop()
         mapView.onStop()

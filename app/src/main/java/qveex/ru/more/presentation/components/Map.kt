@@ -1,5 +1,7 @@
 package qveex.ru.more.presentation.components
 
+import android.location.LocationListener
+import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +13,8 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.location.Location
+import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.presentation.screens.home.HomeContract
 
@@ -40,6 +44,9 @@ fun Map(
         MapView(it).also {
             it.map.isNightModeEnabled = isSystemInDarkTheme
             onEventSent(HomeContract.Event.SetMapView(it))
+            onEventSent(HomeContract.Event.FindCurrentLocation)
+
         }
+
     }, modifier = modifier)
 }

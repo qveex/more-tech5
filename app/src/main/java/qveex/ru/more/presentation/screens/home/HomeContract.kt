@@ -8,14 +8,16 @@ import qveex.ru.more.presentation.base.ViewState
 class HomeContract {
 
     sealed class Event : ViewEvent {
-        data class SelectDepartment(val departmentId: Long): Event()
-        data class SelectAtm(val atmId: Long): Event()
-        data class ShowBottomSheet(val show: Boolean): Event()
-        data class SetMapView(val mapView: MapView): Event()
-        data object OnStart: Event()
-        data object OnStop: Event()
-        data object PlusZoom: Event()
-        data object MinusZoom: Event()
+        data class SelectDepartment(val departmentId: Long) : Event()
+        data class SelectAtm(val atmId: Long) : Event()
+        data class ShowBottomSheet(val show: Boolean) : Event()
+        data class SetMapView(val mapView: MapView) : Event()
+        data object OnStart : Event()
+        data object OnStop : Event()
+        data object PlusZoom : Event()
+        data object MinusZoom : Event()
+
+        data object FindCurrentLocation : Event()
     }
 
     data class State(
@@ -27,8 +29,8 @@ class HomeContract {
 
     sealed class Effect : ViewSideEffect {
 
-        data class Error(val error: String): Effect()
-        data class Success(val success: String): Effect()
+        data class Error(val error: String) : Effect()
+        data class Success(val success: String) : Effect()
 
         sealed class Navigation : Effect() {
             data class ToDepartmentInfoScreen(val id: Long) : Navigation()
