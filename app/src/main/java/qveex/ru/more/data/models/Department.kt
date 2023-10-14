@@ -12,6 +12,7 @@ data class Department(
     val workload: Int,
     val location: Location,
     val hasRamp: Boolean,
+//    val withVIP: Boolean,
     val legal: List<Entity>,
     val individual: List<Entity>
 )
