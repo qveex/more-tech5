@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
         requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
         MapKitFactory.setApiKey(BuildConfig.MAPKIT_API_KEY)
+        MapKitFactory.initialize(this)
         setContent {
             Moretech5Theme {
                 MainScreen()

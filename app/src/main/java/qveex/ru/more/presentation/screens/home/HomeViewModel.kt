@@ -1,7 +1,12 @@
 package qveex.ru.more.presentation.screens.home
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -68,6 +73,7 @@ class HomeViewModel @Inject constructor(
 
     override fun setInitialState() = HomeContract.State()
 
+    @SuppressLint("MissingPermission")
     override fun handleEvents(event: HomeContract.Event) {
         when (event) {
             is HomeContract.Event.SelectDepartment -> selectDepartment(event.departmentId)
@@ -79,10 +85,25 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.PlusZoom -> setZoom(1f)
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
+                val fusedLocationClient =
+                    LocationServices.getFusedLocationProviderClient(mapView.context)
+                val location = fusedLocationClient.lastLocation.addOnCompleteListener {location ->
+                    mapView.mapWindow.map.move(
+                        CameraPosition(
+                            Point(location.result.latitude, location.result.longitude),
+                            15.0f,
+                            0.0f,
+                            0.0f
+                        )
+                    )
+
+                }
+
+
+
             }
 
             is HomeContract.Event.FindCurrentLocation -> {
-                MapKitFactory.initialize(mapView.context)
                 val locationManager = MapKitFactory.getInstance().createLocationManager()
                 locationManager.requestSingleUpdate(object :
                     com.yandex.mapkit.location.LocationListener {
@@ -99,10 +120,8 @@ class HomeViewModel @Inject constructor(
                                 0.0f
                             ),
                             Animation(Animation.Type.SMOOTH, 0.3f),
-                            Map.CameraCallback {
-                                mapView.
-                            }
-                        )
+                        ) {}
+
                     }
                 })
 
