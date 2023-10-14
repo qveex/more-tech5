@@ -1,40 +1,38 @@
 package qveex.ru.more.presentation.screens.start
 
-import android.content.ContentValues.TAG
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -42,49 +40,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.R
-import qveex.ru.more.data.models.StartFilter
 import qveex.ru.more.presentation.components.AppLoading
-import qveex.ru.more.presentation.screens.department_info.DepartmentInfoContract
 import qveex.ru.more.presentation.screens.snack
-import qveex.ru.more.ui.theme.Moretech5Theme
-
 
 private const val TAG = "StartScreen"
-
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun StartItem(image: Painter, text: String, backgroundColor: Color, onClickListener: () -> Unit) {
-    Card(
-        onClick = onClickListener,
-        modifier = Modifier.padding(8.dp),
-        colors = CardDefaults.cardColors(containerColor = backgroundColor)
-    ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Image(
-                painter = image,
-                modifier = Modifier,
-                contentDescription = "loan"
-            )
-            Spacer(modifier = Modifier.size(12.dp))
-            Text(text, style = MaterialTheme.typography.bodyMedium, textAlign = TextAlign.Center)
-        }
-    }
-
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,12 +59,39 @@ fun StartScreen(
     effectFlow: Flow<StartContract.Effect>?,
     onEventSent: (event: StartContract.Event) -> Unit,
     onNavigationRequested: (navigationEffect: StartContract.Effect.Navigation) -> Unit
-
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
-    val filterList = remember { mutableStateListOf<StartFilter>() }
+    val services =
+        listOf(
+            ServiceFilter(
+                image = painterResource(id = R.drawable.ic_credit_card),
+                text = stringResource(id = R.string.title_credit),
+                backgroundColor = Color(0x99FDE35A),
+                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(0, listOf(4, 5))) }
+            ),
+            ServiceFilter(
+                image = painterResource(id = R.drawable.ic_loan),
+                text = stringResource(id = R.string.title_find_atm),
+                backgroundColor = Color(0x9958FF6D),
+                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(1, listOf(1, 2))) }
+            ),
+            ServiceFilter(
+                image = painterResource(id = R.drawable.ic_show_all),
+                text = stringResource(id = R.string.title_find_departments),
+                backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(2, listOf(1, 2, 3, 4, 5))) }
+            ),
+            ServiceFilter(
+                image = painterResource(id = R.drawable.ic_atm),
+                text = stringResource(id = R.string.title_open_deposit),
+                backgroundColor = Color(0x99F254FF),
+                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(3, listOf(3))) }
+            ),
+        )
+
+    BackHandler { }
 
     LaunchedEffect(Unit) {
         Log.i(TAG, "Start Info Screen Launched")
@@ -120,72 +113,74 @@ fun StartScreen(
             }
         }?.collect()
     }
-    Scaffold(topBar = {
-        LargeTopAppBar(
-            title = { Text(text = "Какая услуга Вам нужна?") },
-        )
-    }) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier.padding(it),
-        ) {
-            item {
-                StartItem(
-                    image = painterResource(id = R.drawable.ic_loan),
-                    text = "Кредит или\nИпотека",
-                    backgroundColor = Color(0xFFF8EAA2)
-                ) {
-                    onNavigationRequested(StartContract.Effect.Navigation.ToInfoScreen)
-                }
-            }
-            item {
-                StartItem(
-                    image = painterResource(id = R.drawable.ic_atm),
-                    text = "Найти\nбанкомат",
-                    backgroundColor = Color(0xFFD9FFDE)
 
-                ) {
-                    onNavigationRequested(StartContract.Effect.Navigation.ToInfoScreen)
-                }
-            }
-            item {
-                StartItem(
-                    image = painterResource(id = R.drawable.ic_show_all),
-                    text = "Просмотр\nотделений",
-                    backgroundColor = MaterialTheme.colorScheme.primaryContainer
-
-                ) {
-                    onNavigationRequested(StartContract.Effect.Navigation.ToInfoScreen)
-                }
-            }
-            item {
-                StartItem(
-                    image = painterResource(id = R.drawable.ic_atm),
-                    text = "Открыть\nвклад",
-                    backgroundColor = Color(0x49F57EFF)
-                ) {
-                    onNavigationRequested(StartContract.Effect.Navigation.ToInfoScreen)
-                }
+    if (state.isLoading) AppLoading()
+    else Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = stringResource(id = R.string.title_what_you_want)) },
+                colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    containerColor = Color.Transparent
+                )
+            )
+        },
+        floatingActionButtonPosition = FabPosition.Center,
+        floatingActionButton = {
+            Button(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+                onClick = { onEventSent(StartContract.Event.FindAtmsAndDepartments) },
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            ) {
+                Text(
+                    modifier = Modifier.padding(12.dp),
+                    text = stringResource(id = R.string.title_find),
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
-        Spacer(modifier = Modifier.size(16.dp))
-        Text("Дополнительные фильтры", style = MaterialTheme.typography.titleSmall)
-        Spacer(modifier = Modifier.size(4.dp))
-        Card {
-            if (state.isLoading) {
-                AppLoading()
-            } else {
-                LazyColumn {
-                    items(filterList) { item ->
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onEventSent(StartContract.Event.CheckFilter(item.id)) }
-                            .padding(horizontal = 16.dp, 8.dp)) {
-                            Checkbox(
-                                checked = item.checked,
-                                onCheckedChange = { onEventSent(StartContract.Event.CheckFilter(item.id)) })
-                            Spacer(modifier = Modifier.size(16.dp))
-                            Text(text = item.name, style = MaterialTheme.typography.bodyMedium)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            StartItemList(services = services)
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = stringResource(id = R.string.title_additional_filters),
+                style = MaterialTheme.typography.titleLarge
+            )
+            Card(modifier = Modifier.padding(bottom = 72.dp)) {
+                if (state.isFilters) {
+                    AppLoading()
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.padding(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        items(state.filters) { filter ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clickable { onEventSent(StartContract.Event.CheckFilter(filter.id)) },
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Checkbox(
+                                    checked = filter.checked,
+                                    onCheckedChange = {
+                                        onEventSent(StartContract.Event.CheckFilter(filter.id))
+                                    }
+                                )
+                                Spacer(modifier = Modifier.size(16.dp))
+                                Text(text = filter.name, style = MaterialTheme.typography.bodyLarge)
+                            }
                         }
                     }
                 }
@@ -194,3 +189,53 @@ fun StartScreen(
     }
 }
 
+@Composable
+private fun StartItemList(
+    modifier: Modifier = Modifier,
+    services: List<ServiceFilter>
+) {
+    LazyVerticalGrid(
+        modifier= modifier,
+        columns = GridCells.Fixed(2)
+    ) {
+        items(services) {
+            StartItem(filter = it)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun StartItem(filter: ServiceFilter, ) {
+    Card(
+        onClick = filter.onClickListener,
+        modifier = Modifier.padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor = filter.backgroundColor)
+    ) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = filter.image,
+                modifier = Modifier,
+                contentDescription = "Service icon"
+            )
+            Spacer(modifier = Modifier.size(12.dp))
+            Text(
+                filter.text, style = MaterialTheme.typography.bodyMedium,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+data class ServiceFilter(
+    val image: Painter,
+    val text: String,
+    val backgroundColor: Color,
+    val onClickListener: () -> Unit
+)

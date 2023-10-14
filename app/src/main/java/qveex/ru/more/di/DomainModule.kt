@@ -34,7 +34,6 @@ object DomainModule {
     @Provides
     fun provideOnboardingInteractor(interactors: Interactors) = interactors.onboardingInteractor
 
-
     @Provides
     fun provideStartInteractor(interactors: Interactors) = interactors.startInteractor
 }

@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
+import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.RequestFilter
 import qveex.ru.more.data.remote.Api
 import javax.inject.Inject
@@ -21,11 +22,18 @@ class RemoteDataSource @Inject constructor(
     suspend fun getDepartmentsAndAtmsAround(
         filter: RequestFilter
     ) = scope.async {
-        api.getDepartmentsAndAtmsAround(filter = filter)
+        api.getDepartmentsAndAtmsAround(filter = filter).takeIf { it.isSuccessful }?.body()
+            ?: Info(atms = emptyList(), departments = emptyList())
     }.await()
 
-    suspend fun getServicesFilters() = scope.async { api.getServicesFilters() }.await()
-    suspend fun getOfficesFilters() = scope.async { api.getOfficesFilters() }.await()
-    suspend fun getClientsFilters() = scope.async { api.getClientsFilters() }.await()
+    suspend fun getServicesFilters() = scope.async {
+        api.getServicesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+    }.await()
+    suspend fun getOfficesFilters() = scope.async {
+        api.getOfficesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+    }.await()
+    suspend fun getClientsFilters() = scope.async {
+        api.getClientsFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+    }.await()
 
 }

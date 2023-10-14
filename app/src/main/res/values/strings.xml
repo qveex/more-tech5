@@ -14,6 +14,13 @@
     <string name="title_with_vip">ВТБ Привелегия</string>
     <string name="title_low_load">Сейчас высокая нагруженность</string>
     <string name="title_high_load">Сейчас низкая нагруженность</string>
+    <string name="title_what_you_want">Какая услуга Вам нужна?</string>
+    <string name="title_additional_filters">Дополнительные фильтры</string>
+    <string name="title_find">Найти</string>
+    <string name="title_find_atm">Найти\nбанкомат</string>
+    <string name="title_credit">Кредит или\nипотека</string>
+    <string name="title_find_departments">Просмотр\nотделений</string>
+    <string name="title_open_deposit">Открыть\nвклад</string>
 
     <string name="close_at">Закроется в %s</string>
     <string name="open_at">Откроетя в %s</string>

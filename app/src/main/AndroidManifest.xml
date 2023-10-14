@@ -10,6 +10,7 @@
     <application
         android:name=".Application"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:foregroundServiceType="location"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

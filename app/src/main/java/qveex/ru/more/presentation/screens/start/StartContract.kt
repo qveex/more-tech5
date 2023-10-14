@@ -1,6 +1,5 @@
 package qveex.ru.more.presentation.screens.start
 
-import qveex.ru.more.data.models.StartFilter
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
 import qveex.ru.more.presentation.base.ViewState
@@ -8,13 +7,15 @@ import qveex.ru.more.presentation.base.ViewState
 class StartContract {
 
     sealed class Event : ViewEvent {
-        data object Click : Event()
+        data object FindAtmsAndDepartments : Event()
 
-        data class CheckFilter(val id: Int) : Event()
+        data class CheckFilter(val id: Long) : Event()
+        data class CheckServiceFilter(val buttonId: Long, val ids: List<Long>) : Event()
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val isFilters: Boolean = false,
         val filters: List<StartFilter> = emptyList()
     ) : ViewState
 

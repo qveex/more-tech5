@@ -1,6 +1,5 @@
 package qveex.ru.more.domain.interactor
 
-import qveex.ru.more.data.models.StartFilter
 import qveex.ru.more.domain.repository.Repository
 
 class OnboardingInteractor(
