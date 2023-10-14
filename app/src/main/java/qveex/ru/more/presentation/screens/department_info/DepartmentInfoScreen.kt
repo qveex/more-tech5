@@ -224,7 +224,7 @@ private fun BottomDepartmentInfoBar(
 ) {
     Button(
         modifier = Modifier
-            .padding(24.dp)
+            .padding(horizontal = 24.dp)
             .fillMaxWidth(),
         onClick = onCreateRouteClick,
         shape = RoundedCornerShape(12.dp),
