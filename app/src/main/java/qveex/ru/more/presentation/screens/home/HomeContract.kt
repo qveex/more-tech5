@@ -1,5 +1,6 @@
 package qveex.ru.more.presentation.screens.home
 
+import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
 import qveex.ru.more.presentation.base.ViewState
@@ -10,10 +11,16 @@ class HomeContract {
         data class SelectDepartment(val departmentId: Long): Event()
         data class SelectAtm(val atmId: Long): Event()
         data class ShowBottomSheet(val show: Boolean): Event()
+        data class SetMapView(val mapView: MapView): Event()
+        data object OnStart: Event()
+        data object OnStop: Event()
+        data object PlusZoom: Event()
+        data object MinusZoom: Event()
     }
 
     data class State(
         val isLoading: Boolean = false,
+        val isAnimation: Boolean = false,
         val showBottomSheet: Boolean = false,
         val atmsAndDepartments: List<AtmDepartment> = emptyList()
     ) : ViewState

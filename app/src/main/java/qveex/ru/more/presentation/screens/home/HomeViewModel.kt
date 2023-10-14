@@ -1,6 +1,11 @@
 package qveex.ru.more.presentation.screens.home
 
 import androidx.lifecycle.viewModelScope
+import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.mapview.MapView
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import qveex.ru.more.data.models.Atm
@@ -39,6 +44,7 @@ class HomeViewModel @Inject constructor(
         Calendar.SUNDAY    -> Days.SUNDAY
         else -> Days.MONDAY
     }
+    private lateinit var mapView: MapView
 
     init {
         viewModelScope.launch {
@@ -64,7 +70,39 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.SelectDepartment -> selectDepartment(event.departmentId)
             is HomeContract.Event.SelectAtm -> selectAtm(event.atmId)
             is HomeContract.Event.ShowBottomSheet -> showBottomSheet(event.show)
+            is HomeContract.Event.OnStart -> onStart()
+            is HomeContract.Event.OnStop -> onStop()
+            is HomeContract.Event.MinusZoom -> setZoom(-1f)
+            is HomeContract.Event.PlusZoom -> setZoom(1f)
+            is HomeContract.Event.SetMapView -> { mapView = event.mapView }
         }
+    }
+
+    private fun setZoom(zoom: Float) = with(mapView.map) {
+        if (viewState.value.isAnimation) return@with
+        setState { copy(isAnimation = true) }
+        move(
+            CameraPosition(
+                Point(
+                    cameraPosition.target.latitude,
+                    cameraPosition.target.longitude
+                ),
+                cameraPosition.zoom.plus(zoom),
+                cameraPosition.azimuth,
+                cameraPosition.tilt
+            ),
+            Animation(Animation.Type.SMOOTH, 0.3f)
+        ) { setState { copy(isAnimation = false) } }
+
+    }
+
+    private fun onStart() {
+        MapKitFactory.getInstance().onStart()
+        mapView.onStart()
+    }
+    private fun onStop() {
+        MapKitFactory.getInstance().onStop()
+        mapView.onStop()
     }
 
     private fun showBottomSheet(show: Boolean) = setState {
