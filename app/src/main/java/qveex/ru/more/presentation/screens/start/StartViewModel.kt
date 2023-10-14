@@ -32,7 +32,8 @@ class StartViewModel @Inject constructor(
                     },
                     clientFilters = clientFilters.map {
                         StartFilter(it.id, it.name, false)
-                    }
+                    },
+                    needRamp = StartFilter(0, "Для маломобильных", false) // бэк отказывается засылать его в фильтрах
                 )
             }
         }
@@ -45,11 +46,14 @@ class StartViewModel @Inject constructor(
     override fun handleEvents(event: StartContract.Event) {
         when (event) {
             is StartContract.Event.FindAtmsAndDepartments -> find()
+            is StartContract.Event.SelectRamp -> setRamp()
             is StartContract.Event.SelectClientFilter -> selectClientFilter(event.id)
             is StartContract.Event.SelectDepartmentFilter -> selectDepartmentFilter(event.id)
-            is StartContract.Event.CheckServiceFilter -> checkServiceFilters(event.buttonId, event.ids)
+            is StartContract.Event.SelectServiceFilter -> checkServiceFilters(event.buttonId, event.ids)
         }
     }
+
+    private fun setRamp() = setState { copy(needRamp = needRamp?.copy(checked = !needRamp.checked)) }
 
     private fun selectClientFilter(id: Long) {
         setState {

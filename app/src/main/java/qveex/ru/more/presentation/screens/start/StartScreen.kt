@@ -70,25 +70,25 @@ fun StartScreen(
                 image = painterResource(id = R.drawable.ic_credit_card),
                 text = stringResource(id = R.string.title_credit),
                 backgroundColor = Color(0x99FDE35A),
-                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(0, listOf(4, 5))) }
+                onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(0, listOf(4, 5))) }
             ),
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_loan),
                 text = stringResource(id = R.string.title_find_atm),
                 backgroundColor = Color(0x9958FF6D),
-                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(1, listOf(1, 2))) }
+                onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(1, listOf(1, 2))) }
             ),
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_show_all),
                 text = stringResource(id = R.string.title_find_departments),
                 backgroundColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = .65f),
-                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(2, listOf(1, 2, 3, 4, 5))) }
+                onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(2, listOf(1, 2, 3, 4, 5))) }
             ),
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_atm),
                 text = stringResource(id = R.string.title_open_deposit),
                 backgroundColor = Color(0x99F254FF),
-                onClickListener = { onEventSent(StartContract.Event.CheckServiceFilter(3, listOf(3))) }
+                onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(3, listOf(3))) }
             ),
         )
 
@@ -171,6 +171,11 @@ fun StartScreen(
                         }
                         items(state.departmentFilters) { filter ->
                             FilterRow(filter = filter, onClickListener = { onEventSent(StartContract.Event.SelectDepartmentFilter(it)) })
+                        }
+                        state.needRamp?.let { needRamp ->
+                            item {
+                                FilterRow(filter = needRamp, onClickListener = { onEventSent(StartContract.Event.SelectRamp) })
+                            }
                         }
                     }
                 }

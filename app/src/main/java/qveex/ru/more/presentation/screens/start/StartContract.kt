@@ -11,7 +11,8 @@ class StartContract {
 
         data class SelectClientFilter(val id: Long) : Event()
         data class SelectDepartmentFilter(val id: Long) : Event()
-        data class CheckServiceFilter(val buttonId: Long, val ids: List<Long>) : Event()
+        data class SelectServiceFilter(val buttonId: Long, val ids: List<Long>) : Event()
+        data object SelectRamp : Event()
     }
 
     data class State(
@@ -19,7 +20,8 @@ class StartContract {
         val isFiltersLoading: Boolean = false,
         val selectedService: Long = -1,
         val departmentFilters: List<StartFilter> = emptyList(),
-        val clientFilters: List<StartFilter> = emptyList()
+        val clientFilters: List<StartFilter> = emptyList(),
+        val needRamp: StartFilter? = null
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {
