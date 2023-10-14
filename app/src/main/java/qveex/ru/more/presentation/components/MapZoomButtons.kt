@@ -27,8 +27,12 @@ fun MapZoomButton(icon: ImageVector, description: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun MapZoomButtons(plusZoomOnClickListener: () -> Unit, minusZoomOnClickListener: () -> Unit) {
-    Column {
+fun MapZoomButtons(
+    plusZoomOnClickListener: () -> Unit,
+    minusZoomOnClickListener: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier) {
         MapZoomButton(icon = Icons.Rounded.Add, description = "+ zoom", plusZoomOnClickListener)
         Spacer(modifier = Modifier.size(16.dp))
         MapZoomButton(icon = Icons.Rounded.Remove, description = "- zoom", minusZoomOnClickListener)

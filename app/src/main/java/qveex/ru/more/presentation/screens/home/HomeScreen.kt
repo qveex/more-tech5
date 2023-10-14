@@ -31,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.yandex.mapkit.MapKitFactory
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -58,15 +59,11 @@ fun HomeScreen(
         effectFlow?.onEach { effect ->
             when (effect) {
                 is HomeContract.Effect.Error -> snack(
-                    coroutineScope,
-                    snackbarHostState,
-                    effect.error
+                    coroutineScope, snackbarHostState, effect.error
                 )
 
                 is HomeContract.Effect.Success -> snack(
-                    coroutineScope,
-                    snackbarHostState,
-                    effect.success
+                    coroutineScope, snackbarHostState, effect.success
                 )
 
                 is HomeContract.Effect.Navigation -> onNavigationRequested(effect)
@@ -75,25 +72,18 @@ fun HomeScreen(
     }
 
     val sheetState = rememberModalBottomSheetState()
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        floatingActionButton = {
-            val size = 64.dp
-            val radius = 16.dp.takeIf { state.showBottomSheet } ?: (size / 2f)
-            val cornerRadius =
-                animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
-            ExtendedFloatingActionButton(
-                modifier = Modifier.size(size),
-                shape = RoundedCornerShape(cornerRadius.value),
-                onClick = { onEventSent(HomeContract.Event.ShowBottomSheet(true)) }
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.List,
-                    contentDescription = "List icon"
-                )
-            }
+    Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }, floatingActionButton = {
+        val size = 64.dp
+        val radius = 16.dp.takeIf { state.showBottomSheet } ?: (size / 2f)
+        val cornerRadius = animateDpAsState(targetValue = radius, label = "cornerRadiusAnimation")
+        ExtendedFloatingActionButton(modifier = Modifier.size(size),
+            shape = RoundedCornerShape(cornerRadius.value),
+            onClick = { onEventSent(HomeContract.Event.ShowBottomSheet(true)) }) {
+            Icon(
+                imageVector = Icons.Outlined.List, contentDescription = "List icon"
+            )
         }
-    ) {
+    }) {
 
         if (state.showBottomSheet) {
             ModalBottomSheet(
@@ -124,9 +114,11 @@ fun HomeScreen(
             contentAlignment = Alignment.CenterEnd,
         ) {
             Map()
-            MapZoomButtons(plusZoomOnClickListener = { /*TODO*/ }) {
-                
-            }
+            MapZoomButtons(
+                plusZoomOnClickListener = { },
+                {},
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
     }
 
