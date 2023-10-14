@@ -130,7 +130,6 @@ fun HomeScreen(
             MapTopBar()
         }
     }
-    onEventSent(HomeContract.Event.FindCurrentLocation)
 }
 
 @Composable

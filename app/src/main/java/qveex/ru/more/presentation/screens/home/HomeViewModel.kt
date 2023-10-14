@@ -1,7 +1,11 @@
 package qveex.ru.more.presentation.screens.home
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.VectorDrawable
 import android.util.Log
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
@@ -9,8 +13,10 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.CameraPosition
-import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObjectCollection
+import com.yandex.mapkit.map.MapObjectTapListener
+import com.yandex.mapkit.map.PlacemarkMapObject
+import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -116,13 +122,6 @@ class HomeViewModel @Inject constructor(
                 }
             }
 
-            is HomeContract.Event.AddPlace -> {
-                addPlace(
-                    event.latitude.toDouble(),
-                    event.longitude.toDouble()
-                )
-            }
-
             is HomeContract.Event.FindCurrentLocation -> {
                 val locationManager = MapKitFactory.getInstance().createLocationManager()
                 locationManager.requestSingleUpdate(object :
@@ -170,14 +169,25 @@ class HomeViewModel @Inject constructor(
     private fun onStart() {
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
-        viewState.value.points.forEach {
-            addPlace(it.latitude, it.longitude)
-        }
+        initMarks()
     }
 
     private fun onStop() {
         MapKitFactory.getInstance().onStop()
         mapView.onStop()
+    }
+
+    private fun initMarks() {
+        viewModelScope.launch {
+            interactor.getDepartmentsAndAtmsAround(
+                Location(.0, .0),
+                Location(.0, .0)
+            ).let {
+                (it.atms.map { it.toUi() } + it.departments.map { it.toUi() }).forEach {
+                    addPlace(it)
+                }
+            }
+        }
     }
 
     private fun showBottomSheet(show: Boolean) = setState {
@@ -218,15 +228,48 @@ class HomeViewModel @Inject constructor(
         status = Status.OPEN
     )
 
-    private fun addPlace(latitude: Double, longitude: Double) {
-        val point = Point(latitude, longitude)
-        val mapObject = mapObjectCollection.addPlacemark().apply {
-            geometry = point
-            setIcon(ImageProvider.fromResource(mapView.context, R.drawable.ic_atm))
+    private fun addPlace(atmDepartment: AtmDepartment) {
+        val point = Point(
+            atmDepartment.location.latitude,
+            atmDepartment.location.longitude
+        )
+        val isAtm = atmDepartment.type == InfrastructureType.ATM
+        val title = if (isAtm) "Банкомат\nВТБ" else "Отделение\nВТБ"
+        val icon = if (isAtm) R.drawable.ic_place else R.drawable.ic_place
+        mapObjectCollection.addPlacemark(
+            point,
+            ImageProvider.fromBitmap(
+                (ResourcesCompat.getDrawable(
+                    mapView.context.resources,
+                    icon,
+                    null
+                ) as VectorDrawable).toBitmap()
+            )
+        ).apply {
+            zIndex = 100.0f
+            setText(
+                title,
+                TextStyle()
+                    .setPlacement(TextStyle.Placement.BOTTOM)
+                    .setSize(16.0f)
+                    .setOutlineColor(Color.WHITE)
+            )
+            userData = MarkParams(atmDepartment.id, atmDepartment.type)
+            addTapListener(markOnClick)
         }
 
-        mapObject.zIndex = 100.0f
     }
+
+    private data class MarkParams(val id: Long, val type: InfrastructureType)
+
+    private val markOnClick =
+        MapObjectTapListener { mapObject, point ->
+            val userData = mapObject.userData
+            if (mapObject !is PlacemarkMapObject) return@MapObjectTapListener false
+            if (userData !is MarkParams) return@MapObjectTapListener false
+            setEffect { HomeContract.Effect.Navigation.ToDepartmentInfoScreen(userData.id) }
+            true
+        }
 }
 
 data class AtmDepartment(

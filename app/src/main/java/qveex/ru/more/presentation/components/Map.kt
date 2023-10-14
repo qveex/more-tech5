@@ -44,8 +44,6 @@ fun Map(
         MapView(it).also {
             it.map.isNightModeEnabled = isSystemInDarkTheme
             onEventSent(HomeContract.Event.SetMapView(it))
-            onEventSent(HomeContract.Event.FindCurrentLocation)
-
         }
 
     }, modifier = modifier)

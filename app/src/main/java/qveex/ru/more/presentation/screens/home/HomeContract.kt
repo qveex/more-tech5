@@ -17,8 +17,6 @@ class HomeContract {
         data object OnStop : Event()
         data object PlusZoom : Event()
         data object MinusZoom : Event()
-
-        data class AddPlace(val latitude: Float, val longitude: Float) : Event()
         data object FindCurrentLocation : Event()
     }
 
