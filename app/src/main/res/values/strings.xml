@@ -11,6 +11,8 @@
     <string name="title_empty_departments_atms_list">Не нашлось подходящих вариантов</string>
     <string name="title_create_route">Проложить маршрут</string>
     <string name="title_has_ramp">Подходит для маломобильных</string>
+    <string name="title_low_load">Сейчас высокая нагруженность</string>
+    <string name="title_high_load">Сейчас низкая нагруженность</string>
 
     <string name="close_at">Закроется в %s</string>
     <string name="open_at">Откроетя в %s</string>

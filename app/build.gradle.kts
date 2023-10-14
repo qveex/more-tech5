@@ -115,6 +115,8 @@ dependencies {
     // Yandex maps
     implementation("com.yandex.android:maps.mobile:4.4.0-full")
 
+    // Charts
+    implementation("co.yml:ycharts:2.1.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
