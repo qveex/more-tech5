@@ -126,7 +126,7 @@ class HomeViewModel @Inject constructor(
         address = address,
         metro = metroStation,
         distance = 123, // todo посчитать расстояние от местонахождения пользователя
-        location = location,
+        location = coordinates,
         type = InfrastructureType.DEPARTMENT,
         status = status,
         openAt = individual.find { it.day == curDay }?.openHours?.from,
@@ -138,7 +138,7 @@ class HomeViewModel @Inject constructor(
         address = address,
         metro = metroStation,
         distance = 123, // todo посчитать расстояние от местонахождения пользователя
-        location = location,
+        location = coordinates,
         type = InfrastructureType.ATM,
         status = Status.OPEN
     )

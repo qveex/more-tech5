@@ -10,7 +10,7 @@ data class Department(
     val status: Status,
     val distance: Int,
     val workload: Int,
-    val location: Location,
+    val coordinates: Location,
     val hasRamp: Boolean,
     val withVIP: Boolean,
     val legal: List<Entity>,

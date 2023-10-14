@@ -2,6 +2,7 @@ package qveex.ru.more.data.models
 
 import androidx.annotation.StringRes
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 import qveex.ru.more.R
 
 @Serializable
@@ -11,7 +12,7 @@ data class Entity(
 )
 
 @Serializable
-enum class Days(@StringRes val labelId: Int) {
+enum class Days(@Transient @StringRes val labelId: Int) {
     MONDAY(R.string.label_monday),
     TUESDAY(R.string.label_tuesday),
     WEDNESDAY(R.string.label_wednesday),
