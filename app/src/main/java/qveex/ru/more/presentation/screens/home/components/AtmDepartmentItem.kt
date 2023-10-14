@@ -51,14 +51,16 @@ fun AtmDepartmentItem(
             val icon = if (isAtm) Icons.Outlined.PointOfSale else Icons.Outlined.AccountBalance
             Icon(
                 modifier = Modifier
-                    .weight(2f)
-                    .size(36.dp),
+                    .padding(start = 16.dp)
+                    .size(24.dp),
                 imageVector = icon,
                 tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "Department icon"
             )
             Column(
-                modifier = Modifier.weight(7f),
+                modifier = Modifier
+                    .weight(7f)
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(text = atmDepartment.address, style = MaterialTheme.typography.bodyLarge)
@@ -89,7 +91,8 @@ fun AtmDepartmentItem(
                 )
             }
             Text(
-                modifier = Modifier.weight(2f),
+                modifier = Modifier
+                    .padding(end = 16.dp),
                 text = stringResource(id = R.string.meters, atmDepartment.distance),
                 style = MaterialTheme.typography.titleMedium
             )
