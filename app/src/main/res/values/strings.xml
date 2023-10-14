@@ -6,7 +6,9 @@
     <string name="title_departments">Отделения</string>
     <string name="title_closed">Закрыто</string>
     <string name="title_open">Открыто</string>
+    <string name="title_info_department">Подробности об отделении</string>
     <string name="title_empty_departments_atms_list">Не нашлось подходящих вариантов</string>
+    <string name="title_create_route">Проложить маршрут</string>
 
     <string name="close_at">Закроется в %s</string>
     <string name="open_at">Откроетя в %s</string>

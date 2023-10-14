@@ -25,10 +25,10 @@ class DepartmentInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val info = interactor.getInfo(id)
             setState {
-                copy(department = "$id")
+                copy(department = info)
             }
-            //interactor.getInfo(id)
         }
     }
 

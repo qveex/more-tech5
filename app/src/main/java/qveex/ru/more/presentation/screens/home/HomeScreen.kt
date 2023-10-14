@@ -73,7 +73,10 @@ fun HomeScreen(
                 shape = RoundedCornerShape(cornerRadius.value),
                 onClick = { onEventSent(HomeContract.Event.ShowBottomSheet(true)) }
             ) {
-                Icon(imageVector = Icons.Outlined.List, contentDescription = "List icon")
+                Icon(
+                    imageVector = Icons.Outlined.List,
+                    contentDescription = "List icon"
+                )
             }
         }
     ) {

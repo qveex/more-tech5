@@ -8,6 +8,7 @@ import com.google.accompanist.navigation.animation.composable
 import qveex.ru.more.presentation.navigation.Screen
 import qveex.ru.more.presentation.navigation.defaultEnter
 import qveex.ru.more.presentation.navigation.defaultExit
+import qveex.ru.more.presentation.screens.department_info.DepartmentInfoContract
 import qveex.ru.more.presentation.screens.department_info.DepartmentInfoViewModel
 import qveex.ru.more.presentation.screens.department_info.DepartmentInfoScreen
 import qveex.ru.more.utils.Constants
@@ -26,11 +27,9 @@ fun NavGraphBuilder.departmentInfoNav(navController: NavController) {
             effectFlow = viewModel.effect,
             onEventSent = viewModel::setEvent,
             onNavigationRequested = {
-                /*navController.safeNavigate(
-                    when (it) {
-                        else -> {}
-                    }
-                )*/
+                when (it) {
+                    is DepartmentInfoContract.Effect.Navigation.PopBackStack -> navController.popBackStack()
+                }
             }
         )
     }

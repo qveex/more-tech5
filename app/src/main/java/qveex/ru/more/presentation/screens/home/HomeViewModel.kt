@@ -3,7 +3,6 @@ package qveex.ru.more.presentation.screens.home
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import qveex.ru.more.R
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
