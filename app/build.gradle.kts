@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -5,6 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     id("com.google.devtools.ksp")
 }
+val key: String = gradleLocalProperties(rootDir).getProperty("MAPKIT_API_KEY")
 
 android {
     namespace = "qveex.ru.more"
@@ -30,6 +33,9 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+        debug {
+            buildConfigField("String", "MAPKIT_API_KEY", key)
         }
     }
     compileOptions {
@@ -67,7 +73,7 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
 
     // serialization
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     //theme
     val accompanistVersion = "0.31.0-alpha"
@@ -103,6 +109,10 @@ dependencies {
 
     // DataStore Preferences
     implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Yandex maps
+    implementation("com.yandex.android:maps.mobile:4.4.0-full")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
