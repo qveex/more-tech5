@@ -21,6 +21,7 @@
     <string name="title_credit">Кредит или\nипотека</string>
     <string name="title_find_departments">Просмотр\nотделений</string>
     <string name="title_open_deposit">Открыть\nвклад</string>
+    <string name="title_all_day">Круглосуточно</string>
 
     <string name="close_at">Закроется в %s</string>
     <string name="open_at">Откроетя в %s</string>

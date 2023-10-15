@@ -24,6 +24,9 @@ import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withTimeout
 import qveex.ru.more.InfoParams
 import qveex.ru.more.R
 import qveex.ru.more.data.models.Atm
@@ -39,6 +42,7 @@ import qveex.ru.more.utils.ResourceProvider
 import qveex.ru.more.utils.curDay
 import java.util.Calendar
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.seconds
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -61,6 +65,7 @@ class HomeViewModel @Inject constructor(
     private var infoParams: InfoParams? = null
     private var leftTopBorder: Location? = null
     private var rightBottomBorder: Location? = null
+    private val mutex = Mutex()
 
     init {
         viewModelScope.launch {
@@ -106,10 +111,10 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
-            is HomeContract.Event.UpdatePoints -> onZoom()
             is HomeContract.Event.SetInfoParam -> { infoParams = event.info }
 
             is HomeContract.Event.SetMapView -> {
+                Log.i(TAG, "SetMapView")
                 mapView = event.mapView
                 mapObjectCollection = mapView.mapWindow.map.mapObjects.addCollection()
                 initMarks()
@@ -186,20 +191,7 @@ class HomeViewModel @Inject constructor(
     private fun onZoom() {
         Log.i(TAG, "onZoom")
         getBorders()
-        viewModelScope.launch {
-            interactor.getDepartmentsAndAtmsAround(
-                curLocation = curLocation,
-                leftTopCoordinate = leftTopBorder,
-                rightBottomCoordinate = rightBottomBorder,
-                infoParams = infoParams
-            )?.let { info ->
-                Log.i(TAG, "info = $info")
-                (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
-                    addPlace(it)
-                }
-            }
-        }
-
+        initMarks()
     }
 
     private fun onStart() {
@@ -214,17 +206,23 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun initMarks() {
+        if (mutex.isLocked) return
         viewModelScope.launch {
-            Log.i(TAG, "infoParam = $infoParams")
-            interactor.getDepartmentsAndAtmsAround(
-                curLocation = curLocation,
-                leftTopCoordinate = leftTopBorder,
-                rightBottomCoordinate = rightBottomBorder,
-                infoParams = infoParams
-            )?.let { info ->
-                Log.i(TAG, "info = $info")
-                (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
-                    addPlace(it)
+            withTimeout(5.seconds) {
+                mutex.withLock {
+                    Log.i(TAG, "infoParam = $infoParams")
+                    interactor.getDepartmentsAndAtmsAround(
+                        curLocation = curLocation,
+                        leftTopCoordinate = leftTopBorder,
+                        rightBottomCoordinate = rightBottomBorder,
+                        infoParams = infoParams
+                    )?.let { info ->
+                        Log.i(TAG, "info = $info")
+                        (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
+                            addPlace(it)
+                        }
+                    }
+                    delay(1500)
                 }
             }
         }

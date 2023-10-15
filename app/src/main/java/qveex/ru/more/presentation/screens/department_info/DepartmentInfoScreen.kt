@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessibleForward
+import androidx.compose.material.icons.outlined.AlarmOn
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -45,10 +52,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.yandex.mapkit.mapview.MapView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.R
+import qveex.ru.more.data.models.Atm
+import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.presentation.components.AppLoading
@@ -60,7 +70,7 @@ import qveex.ru.more.presentation.screens.snack
 import qveex.ru.more.ui.theme.errorColor
 import qveex.ru.more.ui.theme.successColor
 
-private const val TAG = "DepartmentInfoScreen"
+private const val TAG = "InfoScreen"
 
 @Composable
 fun DepartmentInfoScreen(
@@ -74,7 +84,7 @@ fun DepartmentInfoScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(Unit) {
-        Log.i(TAG, "Department Info Screen Launched")
+        Log.i(TAG, "Info Screen Launched")
         effectFlow?.onEach { effect ->
             when (effect) {
                 is DepartmentInfoContract.Effect.Error -> snack(
@@ -118,91 +128,56 @@ fun DepartmentInfoScreen(
                     )
                 )
                 .padding(padding)
-                .padding(16.dp),
+                .padding(horizontal = 16.dp, vertical = 32.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
         ) {
-            val department = state.department
-            if (department != null) {
-                Map(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(256.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { },
-                    onStart = { onEventSent(DepartmentInfoContract.Event.OnStart) },
-                    onStop = { onEventSent(DepartmentInfoContract.Event.OnStop) },
-                    setMapView = { onEventSent(DepartmentInfoContract.Event.SetMapView(it)) }
-                )
-                Column {
-                    Text(
-                        text = stringResource(id = R.string.title_address),
-                        style = MaterialTheme.typography.titleSmall
-                    )
-                    Text(
-                        text = department.address,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                    Text(
-                        text = department.metroStation,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    department.individual.forEach {
-                        DayInWeekItem(curDay = state.curDay, days = it)
-                    }
-                }
-                department.individual.find { it.day == state.curDay }.also { Log.i(TAG, "day = $it") } ?.workload?.let {
-                    LoadStatisticChart(load = it)
-                }
 
-                val isOpen = department.status == Status.OPEN
-                val statusColor = if (isOpen) successColor else errorColor
-                val statusText = stringResource(
-                    id =
-                    if (isOpen) R.string.title_open
-                    else R.string.title_closed
-                )
-                Card(
-                    shape = MaterialTheme.shapes.medium,
-                    colors = CardDefaults.cardColors(
-                        containerColor = statusColor.copy(alpha = .6f),
-                    )
-                ) {
-                    Text(
-                        modifier = Modifier.padding(8.dp),
-                        text = statusText,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
+            Map(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(256.dp)
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable { },
+                onStart = { onEventSent(DepartmentInfoContract.Event.OnStart) },
+                onStop = { onEventSent(DepartmentInfoContract.Event.OnStop) },
+                setMapView = { onEventSent(DepartmentInfoContract.Event.SetMapView(it)) }
+            )
 
-                department.hasRamp.takeIf { it }?.let { hasRamp ->
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            modifier = Modifier.size(32.dp),
-                            imageVector = Icons.Outlined.AccessibleForward,
-                            contentDescription = "Schumacher icon"
-                        )
-                        Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = stringResource(id = R.string.title_has_ramp))
-                    }
+            when {
+                state.department != null -> {
+                    DepartmentInfo(
+                        curDay = state.curDay,
+                        department = state.department
+                    )
                 }
-                department.clients.find { it.name == "ВИП" }?.let {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            modifier = Modifier.size(32.dp),
-                            painter = painterResource(id = R.drawable.ic_vtb_logo),
-                            contentDescription = "Schumacher icon"
-                        )
-                        Spacer(modifier = Modifier.padding(4.dp))
-                        Text(text = stringResource(id = R.string.title_with_vip))
-                    }
+                state.atm != null -> {
+                    AtmInfo(atm = state.atm)
                 }
-            } else AppLoading()
+            }
+
         }
+    }
+}
+
+@Composable
+private fun AddressColumns(
+    address: String,
+    metro: String
+) {
+    Column {
+        Text(
+            text = stringResource(id = R.string.title_address),
+            style = MaterialTheme.typography.titleSmall
+        )
+        Text(
+            text = address,
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = metro,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
@@ -260,13 +235,103 @@ private fun BottomDepartmentInfoBar(
 }
 
 @Composable
-private fun DepartmentInfo(department: Department) {
+private fun ColumnScope.DepartmentInfo(
+    curDay: Days,
+    department: Department
+) {
+    AddressColumns(
+        address = department.address,
+        metro = department.metroStation
+    )
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        department.individual.forEach {
+            DayInWeekItem(curDay = curDay, days = it)
+        }
+    }
+    department.individual.find { it.day == curDay }.also { Log.i(TAG, "day = $it") } ?.workload?.let {
+        LoadStatisticChart(load = it)
+    }
 
+    val isOpen = department.status == Status.OPEN
+    val statusColor = if (isOpen) successColor else errorColor
+    val statusText = stringResource(
+        id =
+        if (isOpen) R.string.title_open
+        else R.string.title_closed
+    )
+    Card(
+        shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(
+            containerColor = statusColor.copy(alpha = .6f),
+        )
+    ) {
+        Text(
+            modifier = Modifier.padding(8.dp),
+            text = statusText,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    department.hasRamp.takeIf { it }?.let { hasRamp ->
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                imageVector = Icons.Outlined.AccessibleForward,
+                contentDescription = "Schumacher icon"
+            )
+            Spacer(modifier = Modifier.padding(4.dp))
+            Text(text = stringResource(id = R.string.title_has_ramp))
+        }
+    }
+    department.clients.find { it.name == "ВИП" }?.let {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Image(
+                modifier = Modifier.size(32.dp),
+                painter = painterResource(id = R.drawable.ic_vtb_logo),
+                contentDescription = "Schumacher icon"
+            )
+            Spacer(modifier = Modifier.padding(4.dp))
+            Text(text = stringResource(id = R.string.title_with_vip))
+        }
+    }
 }
 
 @Composable
-private fun AtmInfo(atm: Department) {
-
+private fun ColumnScope.AtmInfo(atm: Atm) {
+    AddressColumns(
+        address = atm.address,
+        metro = atm.metroStation
+    )
+    atm.allDay.takeIf { it }?.let {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                imageVector = Icons.Outlined.AlarmOn,
+                contentDescription = "24h icon"
+            )
+            Spacer(modifier = Modifier.padding(12.dp))
+            Text(text = stringResource(id = R.string.title_all_day))
+        }
+    }
+    atm.services.forEach {
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                modifier = Modifier.size(32.dp),
+                imageVector = Icons.Outlined.Done,
+                contentDescription = "Service Item icon"
+            )
+            Spacer(modifier = Modifier.padding(12.dp))
+            Text(text = it.name)
+        }
+    }
 }
 
 @Preview

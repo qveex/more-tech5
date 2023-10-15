@@ -1,6 +1,7 @@
 package qveex.ru.more.presentation.screens.department_info
 
 import com.yandex.mapkit.mapview.MapView
+import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.InfrastructureType
@@ -20,7 +21,8 @@ class DepartmentInfoContract {
         val isLoading: Boolean = false,
         val curDay: Days = Days.MONDAY,
         val type: InfrastructureType = InfrastructureType.DEPARTMENT,
-        val department: Department? = null
+        val department: Department? = null,
+        val atm: Atm? = null
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {

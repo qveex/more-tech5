@@ -16,9 +16,11 @@ import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import qveex.ru.more.R
+import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.InfrastructureType
@@ -66,9 +68,15 @@ class DepartmentInfoViewModel @Inject constructor(
             )
         }
         viewModelScope.launch {
-            val info: Department? = interactor.getInfo(id)
-            setState {
-                copy(department = info)
+            when (type) {
+                InfrastructureType.DEPARTMENT -> {
+                    val info: Department? = interactor.getDepartmentInfo(id)
+                    setState { copy(department = info) }
+                }
+                InfrastructureType.ATM -> {
+                    val info: Atm? = interactor.getAtmInfo(id)
+                    setState { copy(atm = info) }
+                }
             }
         }
     }
@@ -93,13 +101,8 @@ class DepartmentInfoViewModel @Inject constructor(
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
         viewModelScope.launch {
-            runCatching {
-                withTimeout(10.seconds) {
-                    val state = viewState.value
-                    while (state.department == null) {}
-                    initMarks()
-                }
-            }.onFailure { Log.e(TAG, "can't init deps info for mark") }
+            delay(2000)
+            initMarks()
         }
     }
 
@@ -109,16 +112,18 @@ class DepartmentInfoViewModel @Inject constructor(
     }
 
     private fun initMarks() {
-        viewState.value.department?.coordinates?.let {
+        val state = viewState.value
+        (state.department?.coordinates ?: state.atm?.coordinates)?.let {
             addPlace(it)
         }
     }
 
     private fun addPlace(place: Location) {
         Log.i(TAG, "addPlace place = $place")
+        val isAtm = type == InfrastructureType.ATM
         val point = Point(place.latitude, place.longitude)
-        val title = "Отделение\nВТБ"
-        val icon = R.drawable.ic_place
+        val title = if (isAtm) "Банкомат\nВТБ" else "Отделение\nВТБ"
+        val icon = if (isAtm) R.drawable.atm_ic else R.drawable.ic_place
         mapObjectCollection.addPlacemark(
             point,
             ImageProvider.fromBitmap(
