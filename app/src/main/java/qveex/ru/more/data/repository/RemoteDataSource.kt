@@ -18,28 +18,44 @@ class RemoteDataSource @Inject constructor(
     private val scope = CoroutineScope(coroutineContext)
 
     suspend fun getAtmInfo(atmId: Long) = withContext(coroutineContext) {
-        api.getAtmInfo(atmId).body()
+        runCatching {
+            api.getAtmInfo(atmId).body()
+        }.also { Log.i("REMOTE", it.toString()) }
     }
 
     suspend fun getDepartmentInfo(departmentId: Long) = withContext(coroutineContext) {
+        runCatching {
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
         api.getDepartmentInfo(departmentId).body()
     }
+
     suspend fun getDepartmentsAndAtmsAround(
         filter: RequestFilter
     ) = withContext(coroutineContext) {
-        Log.i("REMOTE", filter.toString())
-        api.getDepartmentsAndAtmsAround(filter = filter).takeIf { it.isSuccessful }?.body()
-            ?: Info(atms = emptyList(), departments = emptyList())
+        runCatching {
+            Log.i("REMOTE", filter.toString())
+            api.getDepartmentsAndAtmsAround(filter = filter).takeIf { it.isSuccessful }?.body()
+                ?: Info(atms = emptyList(), departments = emptyList())
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
     }.also { Log.i("REMOTE", it.toString()) }
 
+
     suspend fun getServicesFilters() = withContext(coroutineContext) {
-        api.getServicesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        runCatching {
+            api.getServicesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
     }
+
     suspend fun getOfficesFilters() = withContext(coroutineContext) {
-        api.getOfficesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        runCatching {
+            api.getOfficesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
     }
+
     suspend fun getClientsFilters() = withContext(coroutineContext) {
-        api.getClientsFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        runCatching {
+            api.getClientsFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
     }
 
 }

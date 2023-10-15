@@ -9,7 +9,7 @@ data class Department(
     val metroStation: String,
     val status: Status,
     val distance: Int,
-    val workload: Int,
+    val workload: Int?,
     val coordinates: Location,
     val hasRamp: Boolean,
     val legal: List<Entity>,

@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
 
             setState {
                 copy(
-                    points = with(objects) {
+                    points = with(objects!!) {
                         atms.map { Point(it.coordinates.latitude, it.coordinates.longitude) } +
                                 departments.map {
                                     Point(
@@ -109,11 +109,11 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
-            is HomeContract.Event.SetInfoParam -> { infoParam = event.info; initMarks() }
+            is HomeContract.Event.SetInfoParam -> { infoParam = event.info }
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
                 mapObjectCollection = mapView.mapWindow.map.mapObjects.addCollection()
-
+                initMarks()
                 val fusedLocationClient =
                     LocationServices.getFusedLocationProviderClient(mapView.context)
                 fusedLocationClient.lastLocation.addOnCompleteListener { location ->
@@ -192,9 +192,11 @@ class HomeViewModel @Inject constructor(
 
     private fun initMarks() {
         viewModelScope.launch {
+            Log.i("MAP", "infoParam = $infoParam")
             (infoParam ?: interactor.getDepartmentsAndAtmsAround(
                 curLocation = curLocation
-            )).let { info ->
+            ))?.let { info ->
+                Log.i("MAP", "info = $info")
                 (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
                     addPlace(it)
                 }
@@ -241,6 +243,7 @@ class HomeViewModel @Inject constructor(
     )
 
     private fun addPlace(atmDepartment: AtmDepartment) {
+        Log.i("MAP", "atmDepartment = $atmDepartment")
         val point = Point(
             atmDepartment.location.latitude,
             atmDepartment.location.longitude

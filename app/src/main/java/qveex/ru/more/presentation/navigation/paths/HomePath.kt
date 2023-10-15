@@ -23,6 +23,7 @@ fun NavGraphBuilder.homeNav(navController: NavController) {
     ) {
         val viewModel = hiltViewModel<HomeViewModel>()
         val sharedViewModel = LocalSharedViewModel.current
+        viewModel.setEvent(HomeContract.Event.SetInfoParam(sharedViewModel.infoParam))
         HomeScreen(
             state = viewModel.viewState.value,
             effectFlow = viewModel.effect,

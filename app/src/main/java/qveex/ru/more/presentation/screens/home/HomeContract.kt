@@ -14,7 +14,7 @@ class HomeContract {
         data class SelectAtm(val atmId: Long) : Event()
         data class ShowBottomSheet(val show: Boolean) : Event()
         data class SetMapView(val mapView: MapView) : Event()
-        data class SetInfoParam(val info: Info) : Event()
+        data class SetInfoParam(val info: Info?) : Event()
         data object OnStart : Event()
         data object OnStop : Event()
         data object PlusZoom : Event()

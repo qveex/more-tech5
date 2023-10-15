@@ -22,8 +22,8 @@ class StartViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             setState { copy(isFiltersLoading = true) }
-            val departmentFilters = interactor.getDepartmentFilters()
-            val clientFilters = interactor.getClientFilters()
+            val departmentFilters = interactor.getDepartmentFilters()!!
+            val clientFilters = interactor.getClientFilters()!!
             setState {
                 copy(
                     isFiltersLoading = false,
@@ -97,7 +97,7 @@ class StartViewModel @Inject constructor(
                 hasRamp = false
             )
             setState { copy(isLoading = false) }
-            setEffect { StartContract.Effect.Navigation.ToHomeScreen(info) }
+            info?.let { setEffect { StartContract.Effect.Navigation.ToHomeScreen(info)  }  }
         }
     }
 
