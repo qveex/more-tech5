@@ -3,7 +3,7 @@ package qveex.ru.more.presentation.screens.home
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.InfoParams
-import qveex.ru.more.data.models.Info
+import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
 import qveex.ru.more.presentation.base.ViewState
@@ -38,7 +38,7 @@ class HomeContract {
         data class Success(val success: String) : Effect()
 
         sealed class Navigation : Effect() {
-            data class ToDepartmentInfoScreen(val id: Long) : Navigation()
+            data class ToInfoScreen(val type: InfrastructureType, val id: Long) : Navigation()
         }
     }
 }

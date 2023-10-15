@@ -11,7 +11,6 @@ import qveex.ru.more.presentation.navigation.defaultExit
 import qveex.ru.more.presentation.screens.department_info.DepartmentInfoContract
 import qveex.ru.more.presentation.screens.department_info.DepartmentInfoViewModel
 import qveex.ru.more.presentation.screens.department_info.DepartmentInfoScreen
-import qveex.ru.more.utils.Constants
 
 @OptIn(ExperimentalAnimationApi::class)
 fun NavGraphBuilder.departmentInfoNav(navController: NavController) {
@@ -20,7 +19,7 @@ fun NavGraphBuilder.departmentInfoNav(navController: NavController) {
         enterTransition = { defaultEnter },
         exitTransition = { defaultExit }
     ) {
-        val id = it.arguments?.getLong(Constants.INFO_ARGUMENT) ?: -1L
+        //val id = it.arguments?.getLong(Constants.INFO_ID_ARGUMENT) ?: -1L
         val viewModel = hiltViewModel<DepartmentInfoViewModel>()
         DepartmentInfoScreen(
             state = viewModel.viewState.value,

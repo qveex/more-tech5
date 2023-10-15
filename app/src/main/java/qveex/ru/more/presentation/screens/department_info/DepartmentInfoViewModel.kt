@@ -25,10 +25,10 @@ import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.domain.interactor.DepartmentInteractor
 import qveex.ru.more.presentation.base.BaseViewModel
-import qveex.ru.more.presentation.screens.home.AtmDepartment
-import qveex.ru.more.presentation.screens.home.HomeViewModel
-import qveex.ru.more.utils.Constants.INFO_ARGUMENT
+import qveex.ru.more.utils.Constants.INFO_ID_ARGUMENT
+import qveex.ru.more.utils.Constants.INFO_TYPE_ARGUMENT
 import qveex.ru.more.utils.ResourceProvider
+import qveex.ru.more.utils.curDay
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.seconds
@@ -50,26 +50,27 @@ class DepartmentInfoViewModel @Inject constructor(
 
     private lateinit var mapView: MapView
     private lateinit var mapObjectCollection: MapObjectCollection
-    private val id: Long = savedStateHandle.get<String>(INFO_ARGUMENT)?.toLongOrNull() ?: -1L
-    private val curDay = when(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-        Calendar.MONDAY    -> Days.MONDAY
-        Calendar.TUESDAY   -> Days.TUESDAY
-        Calendar.WEDNESDAY -> Days.WEDNESDAY
-        Calendar.THURSDAY  -> Days.THURSDAY
-        Calendar.FRIDAY    -> Days.FRIDAY
-        Calendar.SATURDAY  -> Days.SATURDAY
-        Calendar.SUNDAY    -> Days.MONDAY
-        else -> Days.MONDAY
+    private val type: InfrastructureType = when (savedStateHandle.get<String>(INFO_TYPE_ARGUMENT)) {
+        "ATM" -> InfrastructureType.ATM
+        else -> InfrastructureType.DEPARTMENT
     }
+    private val id: Long = savedStateHandle.get<String>(INFO_ID_ARGUMENT)?.toLongOrNull() ?: -1L
+    private val curDay = Calendar.getInstance().curDay
 
     init {
+        Log.i(TAG, "params: type = $type, id = $id")
+        setState {
+            copy(
+                type = this@DepartmentInfoViewModel.type,
+                curDay = Days.MONDAY//this@DepartmentInfoViewModel.curDay
+            )
+        }
         viewModelScope.launch {
             val info: Department? = interactor.getInfo(id)
             setState {
                 copy(department = info)
             }
         }
-        setState { copy(curDay = this@DepartmentInfoViewModel.curDay) }
     }
 
     override fun setInitialState() = DepartmentInfoContract.State()

@@ -7,7 +7,9 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.ui.graphics.vector.ImageVector
 import qveex.ru.more.R
-import qveex.ru.more.utils.Constants.INFO_ARGUMENT
+import qveex.ru.more.data.models.InfrastructureType
+import qveex.ru.more.utils.Constants.INFO_ID_ARGUMENT
+import qveex.ru.more.utils.Constants.INFO_TYPE_ARGUMENT
 
 sealed class Screen(
     val route: String,
@@ -20,7 +22,7 @@ sealed class Screen(
     data object Onboarding : Screen("onboarding")
     data object Departments : Screen("departments", R.string.title_departments, Icons.Outlined.List)
     data object DepartmentInfo :
-        Screen("departmentInfo/{$INFO_ARGUMENT}", R.string.title_info, Icons.Outlined.Info) {
-        fun pasParam(id: Long) = "departmentInfo/$id"
+        Screen("departmentInfo/{$INFO_TYPE_ARGUMENT}/{$INFO_ID_ARGUMENT}", R.string.title_info, Icons.Outlined.Info) {
+        fun pasParams(type: InfrastructureType, id: Long) = "departmentInfo/$type/$id"
     }
 }

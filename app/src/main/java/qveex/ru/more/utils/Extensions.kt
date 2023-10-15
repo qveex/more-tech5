@@ -2,9 +2,11 @@ package qveex.ru.more.utils
 
 import android.util.Log
 import androidx.navigation.NavController
+import qveex.ru.more.data.models.Days
 import qveex.ru.more.utils.Constants.dateFormat
 import qveex.ru.more.utils.Constants.dateTimeFormat
 import qveex.ru.more.utils.Constants.timeFormat
+import java.util.Calendar
 import java.util.Date
 
 fun NavController.safeNavigate(route: String) = try {
@@ -26,3 +28,14 @@ val Long.dateTime: String get() = dateTimeFormat.format(Date(this))
  * @return новый список с замененными элементами
  */
 fun <T> List<T>.replace(newValue: T, predicate: (T) -> Boolean) = map { if (predicate(it)) newValue else it }
+
+val Calendar.curDay get() = when (get(Calendar.DAY_OF_WEEK)) {
+    Calendar.MONDAY -> Days.MONDAY
+    Calendar.TUESDAY -> Days.TUESDAY
+    Calendar.WEDNESDAY -> Days.WEDNESDAY
+    Calendar.THURSDAY -> Days.THURSDAY
+    Calendar.FRIDAY -> Days.FRIDAY
+    Calendar.SATURDAY -> Days.SATURDAY
+    Calendar.SUNDAY -> Days.SUNDAY
+    else -> Days.MONDAY
+}

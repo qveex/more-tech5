@@ -97,7 +97,7 @@ fun HomeScreen(
             ) {
                 AtmDepartmentList(state.atmsAndDepartments) {
                     onEventSent(HomeContract.Event.ShowBottomSheet(false))
-                    onNavigationRequested(HomeContract.Effect.Navigation.ToDepartmentInfoScreen(it.id))
+                    onNavigationRequested(HomeContract.Effect.Navigation.ToInfoScreen(it.type, it.id))
                 }
             }
         }

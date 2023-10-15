@@ -11,7 +11,8 @@ object Constants {
 
     const val SCREEN_TRANSIT_DURATION_MILLIS = 400
 
-    const val INFO_ARGUMENT = "id"
+    const val INFO_ID_ARGUMENT = "id"
+    const val INFO_TYPE_ARGUMENT = "type"
 
     val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())

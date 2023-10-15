@@ -49,11 +49,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.R
+import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.presentation.components.AppLoading
 import qveex.ru.more.presentation.components.Map
 import qveex.ru.more.presentation.screens.department_info.components.DayInWeekItem
 import qveex.ru.more.presentation.screens.department_info.components.LoadStatisticChart
+import qveex.ru.more.presentation.screens.home.AtmDepartment
 import qveex.ru.more.presentation.screens.snack
 import qveex.ru.more.ui.theme.errorColor
 import qveex.ru.more.ui.theme.successColor
@@ -255,6 +257,16 @@ private fun BottomDepartmentInfoBar(
             style = MaterialTheme.typography.bodyLarge
         )
     }
+}
+
+@Composable
+private fun DepartmentInfo(department: Department) {
+
+}
+
+@Composable
+private fun AtmInfo(atm: Department) {
+
 }
 
 @Preview

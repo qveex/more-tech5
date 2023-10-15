@@ -108,7 +108,8 @@ fun DepartmentItemPreview() {
                 type = InfrastructureType.ATM,
                 status = Status.OPEN,
                 openAt = "9:00",
-                closeAt = "22:00"
+                closeAt = "22:00",
+                services = emptyList()
             ),
             onDepartmentClick = {}
         )

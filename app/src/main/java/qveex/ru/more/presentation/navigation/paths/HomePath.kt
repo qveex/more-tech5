@@ -34,7 +34,7 @@ fun NavGraphBuilder.homeNav(navController: NavController) {
             onNavigationRequested = {
                 navController.safeNavigate(
                     when (it) {
-                        is HomeContract.Effect.Navigation.ToDepartmentInfoScreen -> Screen.DepartmentInfo.pasParam(it.id)
+                        is HomeContract.Effect.Navigation.ToInfoScreen -> Screen.DepartmentInfo.pasParams(it.type, it.id)
                     }
                 )
             }

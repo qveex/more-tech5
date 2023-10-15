@@ -9,9 +9,6 @@ import qveex.ru.more.LocalSharedViewModel
 import qveex.ru.more.presentation.navigation.Screen
 import qveex.ru.more.presentation.navigation.defaultEnter
 import qveex.ru.more.presentation.navigation.defaultExit
-import qveex.ru.more.presentation.screens.onboarding.OnboardingContract
-import qveex.ru.more.presentation.screens.onboarding.OnboardingScreen
-import qveex.ru.more.presentation.screens.onboarding.OnboardingViewModel
 import qveex.ru.more.presentation.screens.start.StartContract
 import qveex.ru.more.presentation.screens.start.StartScreen
 import qveex.ru.more.presentation.screens.start.StartViewModel
@@ -37,7 +34,7 @@ fun NavGraphBuilder.startNav(navController: NavController) {
                             sharedViewModel.infoParams = it.infoParams
                             Screen.Home.route
                         }
-                        is StartContract.Effect.Navigation.ToInfoScreen -> Screen.DepartmentInfo.pasParam(it.id)
+                        is StartContract.Effect.Navigation.ToInfoScreen -> Screen.DepartmentInfo.pasParams(it.type, it.id)
                     }
                 )
             }

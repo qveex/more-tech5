@@ -31,10 +31,12 @@ import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
+import qveex.ru.more.data.models.Service
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.interactor.HomeInteractor
 import qveex.ru.more.presentation.base.BaseViewModel
 import qveex.ru.more.utils.ResourceProvider
+import qveex.ru.more.utils.curDay
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -52,16 +54,7 @@ class HomeViewModel @Inject constructor(
         private const val TAG = "HomeViewModel"
     }
 
-    private val curDay = when (Calendar.getInstance().get(Calendar.DAY_OF_WEEK)) {
-        Calendar.MONDAY -> Days.MONDAY
-        Calendar.TUESDAY -> Days.TUESDAY
-        Calendar.WEDNESDAY -> Days.WEDNESDAY
-        Calendar.THURSDAY -> Days.THURSDAY
-        Calendar.FRIDAY -> Days.FRIDAY
-        Calendar.SATURDAY -> Days.SATURDAY
-        Calendar.SUNDAY -> Days.SUNDAY
-        else -> Days.MONDAY
-    }
+    private val curDay = Calendar.getInstance().curDay
     private lateinit var mapView: MapView
     private lateinit var mapObjectCollection: MapObjectCollection
     private var curLocation = Location(.0, .0)
@@ -93,11 +86,7 @@ class HomeViewModel @Inject constructor(
                                 }
                     },
                     atmsAndDepartments = with(objects) {
-                        atms.map {
-                            it.toUi()
-                        } + departments.map {
-                            it.toUi()
-                        }
+                        atms.map { it.toUi() } + departments.map { it.toUi(curDay) }
                     }.sortedBy { it.distance }
                 )
 
@@ -205,7 +194,7 @@ class HomeViewModel @Inject constructor(
                 infoParams = infoParams
             )?.let { info ->
                 Log.i(TAG, "info = $info")
-                (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
+                (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
                     addPlace(it)
                 }
             }
@@ -234,7 +223,7 @@ class HomeViewModel @Inject constructor(
                 infoParams = infoParams
             )?.let { info ->
                 Log.i(TAG, "info = $info")
-                (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
+                (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
                     addPlace(it)
                 }
             }
@@ -256,28 +245,6 @@ class HomeViewModel @Inject constructor(
             HomeContract.Effect.Success("$atmId")
         }
     }
-
-    private fun Department.toUi() = AtmDepartment(
-        id = id,
-        address = address,
-        metro = metroStation,
-        distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
-        location = coordinates,
-        type = InfrastructureType.DEPARTMENT,
-        status = status,
-        openAt = individual.find { it.day == curDay }?.openHours?.from,
-        closeAt = individual.find { it.day == curDay }?.openHours?.to,
-    )
-
-    private fun Atm.toUi() = AtmDepartment(
-        id = id,
-        address = address,
-        metro = metroStation,
-        distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
-        location = coordinates,
-        type = InfrastructureType.ATM,
-        status = Status.OPEN
-    )
 
     private fun addPlace(atmDepartment: AtmDepartment) {
         Log.i(TAG, "addPlace atmDepartment = $atmDepartment")
@@ -338,7 +305,7 @@ class HomeViewModel @Inject constructor(
             val userData = mapObject.userData
             if (mapObject !is PlacemarkMapObject) return@MapObjectTapListener false
             if (userData !is MarkParams) return@MapObjectTapListener false
-            setEffect { HomeContract.Effect.Navigation.ToDepartmentInfoScreen(userData.id) }
+            setEffect { HomeContract.Effect.Navigation.ToInfoScreen(userData.type, userData.id) }
             true
         }
 }
@@ -351,6 +318,31 @@ data class AtmDepartment(
     val location: Location,
     val type: InfrastructureType,
     val status: Status,
+    val services: List<Service>,
     val openAt: String? = null,
     val closeAt: String? = null
+)
+
+fun Department.toUi(curDay: Days) = AtmDepartment(
+    id = id,
+    address = address,
+    metro = metroStation,
+    distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
+    location = coordinates,
+    type = InfrastructureType.DEPARTMENT,
+    status = status,
+    openAt = individual.find { it.day == curDay }?.openHours?.from,
+    closeAt = individual.find { it.day == curDay }?.openHours?.to,
+    services = services
+)
+
+fun Atm.toUi() = AtmDepartment(
+    id = id,
+    address = address,
+    metro = metroStation,
+    distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
+    location = coordinates,
+    type = InfrastructureType.ATM,
+    status = Status.OPEN,
+    services = services
 )
