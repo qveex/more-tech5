@@ -1,9 +1,10 @@
 package qveex.ru.more.data.repository
 
+import android.util.Log
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.RequestFilter
 import qveex.ru.more.data.remote.Api
@@ -13,27 +14,32 @@ class RemoteDataSource @Inject constructor(
     private val api: Api
 ) {
 
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val coroutineContext = Dispatchers.IO + SupervisorJob()
+    private val scope = CoroutineScope(coroutineContext)
 
-    suspend fun getAtmInfo(atmId: Long) =
-        scope.async { api.getAtmInfo(atmId) }.await()
-    suspend fun getDepartmentInfo(departmentId: Long) =
-        scope.async { api.getDepartmentInfo(departmentId) }.await()
+    suspend fun getAtmInfo(atmId: Long) = withContext(coroutineContext) {
+        api.getAtmInfo(atmId).body()
+    }
+
+    suspend fun getDepartmentInfo(departmentId: Long) = withContext(coroutineContext) {
+        api.getDepartmentInfo(departmentId).body()
+    }
     suspend fun getDepartmentsAndAtmsAround(
         filter: RequestFilter
-    ) = scope.async {
+    ) = withContext(coroutineContext) {
+        Log.i("REMOTE", filter.toString())
         api.getDepartmentsAndAtmsAround(filter = filter).takeIf { it.isSuccessful }?.body()
             ?: Info(atms = emptyList(), departments = emptyList())
-    }.await()
+    }.also { Log.i("REMOTE", it.toString()) }
 
-    suspend fun getServicesFilters() = scope.async {
+    suspend fun getServicesFilters() = withContext(coroutineContext) {
         api.getServicesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
-    }.await()
-    suspend fun getOfficesFilters() = scope.async {
+    }
+    suspend fun getOfficesFilters() = withContext(coroutineContext) {
         api.getOfficesFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
-    }.await()
-    suspend fun getClientsFilters() = scope.async {
+    }
+    suspend fun getClientsFilters() = withContext(coroutineContext) {
         api.getClientsFilters().takeIf { it.isSuccessful }?.body() ?: emptyList()
-    }.await()
+    }
 
 }

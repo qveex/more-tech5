@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import qveex.ru.more.data.models.Days
+import qveex.ru.more.data.models.Department
 import qveex.ru.more.domain.interactor.DepartmentInteractor
 import qveex.ru.more.presentation.base.BaseViewModel
 import qveex.ru.more.utils.Constants.INFO_ARGUMENT
@@ -37,7 +38,7 @@ class DepartmentInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val info = interactor.getInfo(id)
+            val info: Department? = interactor.getInfo(id)
             setState {
                 copy(department = info)
             }

@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.google.accompanist.navigation.animation.composable
+import qveex.ru.more.LocalSharedViewModel
 import qveex.ru.more.presentation.navigation.Screen
 import qveex.ru.more.presentation.navigation.defaultEnter
 import qveex.ru.more.presentation.navigation.defaultExit
@@ -21,6 +22,7 @@ fun NavGraphBuilder.homeNav(navController: NavController) {
         exitTransition = { defaultExit }
     ) {
         val viewModel = hiltViewModel<HomeViewModel>()
+        val sharedViewModel = LocalSharedViewModel.current
         HomeScreen(
             state = viewModel.viewState.value,
             effectFlow = viewModel.effect,

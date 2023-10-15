@@ -1,5 +1,6 @@
 package qveex.ru.more.presentation.screens.start
 
+import qveex.ru.more.data.models.Info
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
 import qveex.ru.more.presentation.base.ViewState
@@ -31,7 +32,7 @@ class StartContract {
 
         sealed class Navigation : Effect() {
             data class ToInfoScreen(val id: Long) : Navigation()
-            data object ToHomeScreen : Navigation()
+            data class ToHomeScreen(val info: Info) : Navigation()
         }
     }
 }

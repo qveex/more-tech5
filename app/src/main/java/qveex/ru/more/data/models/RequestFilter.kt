@@ -4,11 +4,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RequestFilter(
-    val leftTopCoordinate: Location,
-    val rightBottomCoordinate: Location,
+    val leftTopCoordinate: Location?,
+    val rightBottomCoordinate: Location?,
     val curUserCoordinate: Location,
-    val services: List<Int>,
-    val officeTypes: List<Int>,
-    val clientTypes: List<String>,
-    val hasRamp: Boolean
+    val services: List<Long> = emptyList(),
+    val officeTypes: List<Long> = emptyList(),
+    val clientTypes: List<Long> = emptyList(),
+    val hasRamp: Boolean = false
 )

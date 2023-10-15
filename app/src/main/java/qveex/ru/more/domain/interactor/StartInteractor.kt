@@ -3,6 +3,7 @@ package qveex.ru.more.domain.interactor
 import android.util.Log
 import qveex.ru.more.data.models.Filter
 import qveex.ru.more.data.models.Info
+import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.RequestFilter
 import qveex.ru.more.domain.repository.Repository
 
@@ -14,16 +15,21 @@ class StartInteractor(
 
     suspend fun getClientFilters() = repo.getClientsFilters()
 
-    suspend fun findInfo() {}/*: Info = repo.getDepartmentsAndAtmsAround(
+    suspend fun findInfo(
+        services: List<Long>,
+        officeTypes: List<Long>,
+        clientTypes: List<Long>,
+        hasRamp: Boolean
+    ) = repo.getDepartmentsAndAtmsAround(
         requestFilter = RequestFilter(
-            leftTopCoordinate = leftTopCoordinate,
-            rightBottomCoordinate = rightBottomCoordinate,
-            curUserCoordinate = curUserCoordinate,
+            leftTopCoordinate = null,
+            rightBottomCoordinate = null,
+            curUserCoordinate = Location(59.56, 30.1850),
             services = services,
             officeTypes = officeTypes,
             clientTypes = clientTypes,
             hasRamp = hasRamp,
         )
-    )*/
+    )
 
 }

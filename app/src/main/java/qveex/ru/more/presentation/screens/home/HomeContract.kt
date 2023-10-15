@@ -2,6 +2,7 @@ package qveex.ru.more.presentation.screens.home
 
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.mapview.MapView
+import qveex.ru.more.data.models.Info
 import qveex.ru.more.presentation.base.ViewEvent
 import qveex.ru.more.presentation.base.ViewSideEffect
 import qveex.ru.more.presentation.base.ViewState
@@ -13,6 +14,7 @@ class HomeContract {
         data class SelectAtm(val atmId: Long) : Event()
         data class ShowBottomSheet(val show: Boolean) : Event()
         data class SetMapView(val mapView: MapView) : Event()
+        data class SetInfoParam(val info: Info) : Event()
         data object OnStart : Event()
         data object OnStop : Event()
         data object PlusZoom : Event()

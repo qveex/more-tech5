@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Atm(
-    val atmId: Long,
+    val id: Long,
     val address: String,
     val metroStation: String,
     val allDay: Boolean,

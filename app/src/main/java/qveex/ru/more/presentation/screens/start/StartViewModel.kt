@@ -90,10 +90,15 @@ class StartViewModel @Inject constructor(
         val state = viewState.value
         viewModelScope.launch {
             setState { copy(isLoading = true) }
-            interactor.findInfo()
+            val info = interactor.findInfo(
+                services = services,
+                officeTypes = state.departmentFilters.filter { it.checked }.map { it.id },
+                clientTypes = state.clientFilters.filter { it.checked }.map { it.id },
+                hasRamp = false
+            )
             setState { copy(isLoading = false) }
+            setEffect { StartContract.Effect.Navigation.ToHomeScreen(info) }
         }
-        setEffect { StartContract.Effect.Navigation.ToHomeScreen }
     }
 
 }

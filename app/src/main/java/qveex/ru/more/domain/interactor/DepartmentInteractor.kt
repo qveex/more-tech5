@@ -12,8 +12,8 @@ class DepartmentInteractor(
     private val repo: Repository
 ) {
 
-    suspend fun getInfo(id: Long) = Department(
-        departmentId = 1,
+    suspend fun getInfo(id: Long) = /*Department(
+        id = 1,
         address = "ул. Пушкина д. 3",
         metroStation = "Сенная площадь",
         status = Status.OPEN,
@@ -34,6 +34,6 @@ class DepartmentInteractor(
             Entity(Days.SATURDAY, OpenHours("11:00", "20:00")),
             Entity(Days.SUNDAY, OpenHours("12:00", "20:00"))
         ),
-    )//repo.getDepartmentInfo(id)
+    )*/repo.getDepartmentInfo(id)
 
 }

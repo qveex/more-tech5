@@ -159,8 +159,6 @@ fun DepartmentInfoScreen(
                     style = MaterialTheme.typography.bodyMedium
                 )
 
-
-
                 department.hasRamp.takeIf { it }?.let { hasRamp ->
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
@@ -172,7 +170,7 @@ fun DepartmentInfoScreen(
                         Text(text = stringResource(id = R.string.title_has_ramp))
                     }
                 }
-                department.withVIP.takeIf { it }?.let {
+                department.clients.find { it.name == "ВИП" }?.let {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Image(
                             modifier = Modifier.size(32.dp),

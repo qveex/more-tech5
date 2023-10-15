@@ -55,8 +55,18 @@ private fun DayInWeekItemPreview() {
     DayInWeekItem(
         curDay = Days.FRIDAY,
         days = Entity(
-            day = Days.MONDAY,
-            openHours = OpenHours("9:00", "22:00")
+            Days.SUNDAY,
+            OpenHours("9:00", "22:00"),
+            mapOf(
+                "1" to 10,
+                "2" to 20,
+                "3" to 30,
+                "4" to 40,
+                "5" to 50,
+                "6" to 60,
+                "7" to 70,
+                "8" to 80,
+            )
         )
     )
 }
@@ -67,8 +77,18 @@ private fun DayInWeekItemPreview2() {
     DayInWeekItem(
         curDay = Days.SATURDAY,
         days = Entity(
-            day = Days.SATURDAY,
-            openHours = OpenHours("9:00", "22:00")
+            Days.SUNDAY,
+            OpenHours("9:00", "22:00"),
+            mapOf(
+                "1" to 10,
+                "2" to 20,
+                "3" to 30,
+                "4" to 40,
+                "5" to 50,
+                "6" to 60,
+                "7" to 70,
+                "8" to 80,
+            )
         )
     )
 }

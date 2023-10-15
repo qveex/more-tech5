@@ -8,7 +8,8 @@ import qveex.ru.more.R
 @Serializable
 data class Entity(
     val day: Days,
-    val openHours: OpenHours
+    val openHours: OpenHours,
+    val workLoad: Map<String, Int>
 )
 
 @Serializable

@@ -1,5 +1,6 @@
 package qveex.ru.more.domain.interactor
 
+import android.util.Log
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
@@ -7,6 +8,7 @@ import qveex.ru.more.data.models.Entity
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.OpenHours
+import qveex.ru.more.data.models.RequestFilter
 import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.repository.Repository
 
@@ -15,12 +17,14 @@ class HomeInteractor(
 ) {
 
     suspend fun getDepartmentsAndAtmsAround(
-        leftTopCoordinate: Location,
-        rightBottomCoordinate: Location
-    ) = Info(
+        leftTopCoordinate: Location? = null,
+        rightBottomCoordinate: Location? = null,
+        curLocation: Location,
+
+    ) = /*Info(
         atms = listOf(
             Atm(
-                atmId = 1,
+                id = 1,
                 address = "ул. Пушкина д. 3",
                 metroStation = "Сенная площадь",
                 allDay = true,
@@ -31,7 +35,7 @@ class HomeInteractor(
         ),
         departments = listOf(
             Department(
-                departmentId = 1,
+                id = 1,
                 address = "ул. Пушкина д. 3",
                 metroStation = "Сенная площадь",
                 status = Status.CLOSED,
@@ -41,18 +45,47 @@ class HomeInteractor(
                 hasRamp = true,
                 withVIP = true,
                 legal = listOf(
-                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00")),
-                    Entity(Days.SUNDAY, OpenHours("9:00", "22:00"))
+                    Entity(
+                        Days.SUNDAY,
+                        OpenHours("9:00", "22:00"),
+                        mapOf(
+                            "1" to 10,
+                            "2" to 20,
+                            "3" to 30,
+                            "4" to 40,
+                            "5" to 50,
+                            "6" to 60,
+                            "7" to 70,
+                            "8" to 80,
+                        )
+                    )
                 ),
                 individual = listOf(
-                    Entity(Days.SATURDAY, OpenHours("9:00", "22:00")),
-                    Entity(Days.SUNDAY, OpenHours("9:00", "22:00"))
+                    Entity(
+                        Days.SUNDAY,
+                        OpenHours("9:00", "22:00"),
+                        mapOf(
+                            "1" to 10,
+                            "2" to 20,
+                            "3" to 30,
+                            "4" to 40,
+                            "5" to 50,
+                            "6" to 60,
+                            "7" to 70,
+                            "8" to 80,
+                        )
+                    )
                 ),
+                services = emptyList(),
+                clients = emptyList()
             )
         )
-    ) /*repo.getDepartmentsAndAtmsAround(
-        leftTopCoordinate = leftTopCoordinate,
-        rightBottomCoordinate = rightBottomCoordinate
-    )*/
+    ) */repo.getDepartmentsAndAtmsAround(
+        requestFilter = RequestFilter(
+            leftTopCoordinate = leftTopCoordinate,
+            rightBottomCoordinate = rightBottomCoordinate,
+            curUserCoordinate = curLocation
+        ).also { Log.i("REMOTE", "here") }
+    )
 
 }

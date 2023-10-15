@@ -20,11 +20,13 @@ import com.yandex.mapkit.map.TextStyle
 import com.yandex.mapkit.mapview.MapView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import qveex.ru.more.R
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
+import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.Status
@@ -60,12 +62,15 @@ class HomeViewModel @Inject constructor(
     }
     private lateinit var mapView: MapView
     private lateinit var mapObjectCollection: MapObjectCollection
+    private var curLocation = Location(.0, .0)
+    private var infoParam: Info? = null
 
     init {
         viewModelScope.launch {
-            val objects = interactor.getDepartmentsAndAtmsAround(
-                leftTopCoordinate = Location(.0, .0),
-                rightBottomCoordinate = Location(.0, .0)
+            delay(1000)
+            Log.i("REMOTE", "curLoc = $curLocation")
+            val objects = infoParam ?: interactor.getDepartmentsAndAtmsAround(
+                curLocation = curLocation
             )
 
             setState {
@@ -104,6 +109,7 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
+            is HomeContract.Event.SetInfoParam -> { infoParam = event.info; initMarks() }
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
                 mapObjectCollection = mapView.mapWindow.map.mapObjects.addCollection()
@@ -111,6 +117,10 @@ class HomeViewModel @Inject constructor(
                 val fusedLocationClient =
                     LocationServices.getFusedLocationProviderClient(mapView.context)
                 fusedLocationClient.lastLocation.addOnCompleteListener { location ->
+                    curLocation = Location(
+                        location.result.latitude,
+                        location.result.longitude
+                    )
                     mapView.mapWindow.map.move(
                         CameraPosition(
                             Point(location.result.latitude, location.result.longitude),
@@ -130,10 +140,14 @@ class HomeViewModel @Inject constructor(
                         Log.d("LocationStatus", "No status")
                     }
 
-                    override fun onLocationUpdated(p0: com.yandex.mapkit.location.Location) {
+                    override fun onLocationUpdated(loc: com.yandex.mapkit.location.Location) {
+                        curLocation = Location(
+                            loc.position.latitude,
+                            loc.position.longitude
+                        )
                         mapView.mapWindow.map.move(
                             CameraPosition(
-                                Point(p0.position.latitude, p0.position.longitude),
+                                Point(loc.position.latitude, loc.position.longitude),
                                 1.0f,
                                 0.0f,
                                 0.0f
@@ -169,7 +183,6 @@ class HomeViewModel @Inject constructor(
     private fun onStart() {
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
-        initMarks()
     }
 
     private fun onStop() {
@@ -179,11 +192,10 @@ class HomeViewModel @Inject constructor(
 
     private fun initMarks() {
         viewModelScope.launch {
-            interactor.getDepartmentsAndAtmsAround(
-                Location(.0, .0),
-                Location(.0, .0)
-            ).let {
-                (it.atms.map { it.toUi() } + it.departments.map { it.toUi() }).forEach {
+            (infoParam ?: interactor.getDepartmentsAndAtmsAround(
+                curLocation = curLocation
+            )).let { info ->
+                (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
                     addPlace(it)
                 }
             }
@@ -207,10 +219,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun Department.toUi() = AtmDepartment(
-        id = departmentId,
+        id = id,
         address = address,
         metro = metroStation,
-        distance = 123, // todo посчитать расстояние от местонахождения пользователя
+        distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
         location = coordinates,
         type = InfrastructureType.DEPARTMENT,
         status = status,
@@ -219,10 +231,10 @@ class HomeViewModel @Inject constructor(
     )
 
     private fun Atm.toUi() = AtmDepartment(
-        id = atmId,
+        id = id,
         address = address,
         metro = metroStation,
-        distance = 123, // todo посчитать расстояние от местонахождения пользователя
+        distance = (0..1000).random(), // todo посчитать расстояние от местонахождения пользователя
         location = coordinates,
         type = InfrastructureType.ATM,
         status = Status.OPEN
@@ -235,7 +247,7 @@ class HomeViewModel @Inject constructor(
         )
         val isAtm = atmDepartment.type == InfrastructureType.ATM
         val title = if (isAtm) "Банкомат\nВТБ" else "Отделение\nВТБ"
-        val icon = if (isAtm) R.drawable.ic_place else R.drawable.ic_place
+        val icon = if (isAtm) R.drawable.atm_ic else R.drawable.ic_place
         mapObjectCollection.addPlacemark(
             point,
             ImageProvider.fromBitmap(
@@ -263,7 +275,7 @@ class HomeViewModel @Inject constructor(
     private data class MarkParams(val id: Long, val type: InfrastructureType)
 
     private val markOnClick =
-        MapObjectTapListener { mapObject, point ->
+        MapObjectTapListener { mapObject, _ ->
             val userData = mapObject.userData
             if (mapObject !is PlacemarkMapObject) return@MapObjectTapListener false
             if (userData !is MarkParams) return@MapObjectTapListener false
