@@ -51,7 +51,6 @@ class DepartmentInfoViewModel @Inject constructor(
     override fun handleEvents(event: DepartmentInfoContract.Event) {
         when (event) {
             is DepartmentInfoContract.Event.Click -> {}
-            else -> {}
         }
     }
 

@@ -3,6 +3,7 @@ package qveex.ru.more.presentation.screens.start
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import qveex.ru.more.InfoParams
 import qveex.ru.more.domain.interactor.StartInteractor
 import qveex.ru.more.presentation.base.BaseViewModel
 import qveex.ru.more.utils.ResourceProvider
@@ -89,15 +90,16 @@ class StartViewModel @Inject constructor(
     private fun find() {
         val state = viewState.value
         viewModelScope.launch {
-            setState { copy(isLoading = true) }
-            val info = interactor.findInfo(
-                services = services,
-                officeTypes = state.departmentFilters.filter { it.checked }.map { it.id },
-                clientTypes = state.clientFilters.filter { it.checked }.map { it.id },
-                hasRamp = false
-            )
-            setState { copy(isLoading = false) }
-            info?.let { setEffect { StartContract.Effect.Navigation.ToHomeScreen(info)  }  }
+            setEffect {
+                StartContract.Effect.Navigation.ToHomeScreen(
+                    InfoParams(
+                        serviceFilters = services,
+                        departmentFilters = state.departmentFilters.filter { it.checked }.map { it.id },
+                        clientFilters = state.clientFilters.filter { it.checked }.map { it.id },
+                        hasRamp = false
+                    )
+                )
+            }
         }
     }
 

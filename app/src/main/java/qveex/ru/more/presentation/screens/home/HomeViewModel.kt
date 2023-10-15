@@ -13,6 +13,7 @@ import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.ScreenPoint
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.LocationStatus
+import com.yandex.mapkit.map.CameraListener
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.MapObjectCollection
 import com.yandex.mapkit.map.MapObjectTapListener
@@ -23,11 +24,11 @@ import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import qveex.ru.more.InfoParams
 import qveex.ru.more.R
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
-import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.InfrastructureType
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.Status
@@ -64,18 +65,20 @@ class HomeViewModel @Inject constructor(
     private lateinit var mapView: MapView
     private lateinit var mapObjectCollection: MapObjectCollection
     private var curLocation = Location(.0, .0)
-    private var infoParam: Info? = null
+    private var infoParams: InfoParams? = null
     private var leftTopBorder: Location? = null
     private var rightBottomBorder: Location? = null
 
     init {
         viewModelScope.launch {
             delay(1000)
-            Log.i("REMOTE", "curLoc = $curLocation")
-            val objects = infoParam ?: interactor.getDepartmentsAndAtmsAround(
+            Log.i(TAG, "infoParams = $infoParams")
+            Log.i(TAG, "curLoc = $curLocation")
+            val objects = interactor.getDepartmentsAndAtmsAround(
                 curLocation = curLocation,
                 leftTopCoordinate = leftTopBorder,
-                rightBottomCoordinate = rightBottomBorder
+                rightBottomCoordinate = rightBottomBorder,
+                infoParams = infoParams
             )
 
             setState {
@@ -115,9 +118,7 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
             is HomeContract.Event.UpdatePoints -> onZoom()
-            is HomeContract.Event.SetInfoParam -> {
-                infoParam = event.info
-            }
+            is HomeContract.Event.SetInfoParam -> { infoParams = event.info }
 
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
@@ -146,7 +147,7 @@ class HomeViewModel @Inject constructor(
                 locationManager.requestSingleUpdate(object :
                     com.yandex.mapkit.location.LocationListener {
                     override fun onLocationStatusUpdated(p0: LocationStatus) {
-                        Log.d("LocationStatus", "No status")
+                        Log.d(TAG, "No status")
                     }
 
                     override fun onLocationUpdated(loc: com.yandex.mapkit.location.Location) {
@@ -194,14 +195,16 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun onZoom() {
+        Log.i(TAG, "onZoom")
         getBorders()
         viewModelScope.launch {
             interactor.getDepartmentsAndAtmsAround(
                 curLocation = curLocation,
                 leftTopCoordinate = leftTopBorder,
-                rightBottomCoordinate = rightBottomBorder
+                rightBottomCoordinate = rightBottomBorder,
+                infoParams = infoParams
             )?.let { info ->
-                Log.i("MAP", "info = $info")
+                Log.i(TAG, "info = $info")
                 (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
                     addPlace(it)
                 }
@@ -213,6 +216,7 @@ class HomeViewModel @Inject constructor(
     private fun onStart() {
         MapKitFactory.getInstance().onStart()
         mapView.onStart()
+        mapView.mapWindow.map.addCameraListener(cameraListener)
     }
 
     private fun onStop() {
@@ -222,13 +226,14 @@ class HomeViewModel @Inject constructor(
 
     private fun initMarks() {
         viewModelScope.launch {
-            Log.i("MAP", "infoParam = $infoParam")
-            (infoParam ?: interactor.getDepartmentsAndAtmsAround(
+            Log.i(TAG, "infoParam = $infoParams")
+            interactor.getDepartmentsAndAtmsAround(
                 curLocation = curLocation,
                 leftTopCoordinate = leftTopBorder,
-                rightBottomCoordinate = rightBottomBorder
-            ))?.let { info ->
-                Log.i("MAP", "info = $info")
+                rightBottomCoordinate = rightBottomBorder,
+                infoParams = infoParams
+            )?.let { info ->
+                Log.i(TAG, "info = $info")
                 (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
                     addPlace(it)
                 }
@@ -275,7 +280,7 @@ class HomeViewModel @Inject constructor(
     )
 
     private fun addPlace(atmDepartment: AtmDepartment) {
-        Log.i("MAP", "atmDepartment = $atmDepartment")
+        Log.i(TAG, "addPlace atmDepartment = $atmDepartment")
         val point = Point(
             atmDepartment.location.latitude,
             atmDepartment.location.longitude
@@ -327,6 +332,7 @@ class HomeViewModel @Inject constructor(
 
     private data class MarkParams(val id: Long, val type: InfrastructureType)
 
+    private val cameraListener = CameraListener { _, _, _, _ -> onZoom() }
     private val markOnClick =
         MapObjectTapListener { mapObject, _ ->
             val userData = mapObject.userData

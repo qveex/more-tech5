@@ -1,6 +1,7 @@
 package qveex.ru.more.domain.interactor
 
 import android.util.Log
+import qveex.ru.more.InfoParams
 import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
@@ -20,7 +21,7 @@ class HomeInteractor(
         leftTopCoordinate: Location? = null,
         rightBottomCoordinate: Location? = null,
         curLocation: Location,
-
+        infoParams: InfoParams?
     ) = /*Info(
         atms = listOf(
             Atm(
@@ -84,8 +85,12 @@ class HomeInteractor(
         requestFilter = RequestFilter(
             leftTopCoordinate = leftTopCoordinate,
             rightBottomCoordinate = rightBottomCoordinate,
-            curUserCoordinate = curLocation
-        ).also { Log.i("REMOTE", "here") }
+            curUserCoordinate = curLocation,
+            services = infoParams?.serviceFilters ?: emptyList(),
+            officeTypes = infoParams?.departmentFilters ?: emptyList(),
+            clientTypes = infoParams?.clientFilters ?: emptyList(),
+            hasRamp = infoParams?.hasRamp ?: false
+        ).also { Log.i("REMOTE", "filter = $it") }
     )
 
 }

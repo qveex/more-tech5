@@ -23,7 +23,10 @@ fun NavGraphBuilder.homeNav(navController: NavController) {
     ) {
         val viewModel = hiltViewModel<HomeViewModel>()
         val sharedViewModel = LocalSharedViewModel.current
-        viewModel.setEvent(HomeContract.Event.SetInfoParam(sharedViewModel.infoParam))
+        sharedViewModel.infoParams?.let { // todo вызывается при каждой рекомпозиции
+            viewModel.setEvent(HomeContract.Event.SetInfoParam(it))
+        }
+
         HomeScreen(
             state = viewModel.viewState.value,
             effectFlow = viewModel.effect,

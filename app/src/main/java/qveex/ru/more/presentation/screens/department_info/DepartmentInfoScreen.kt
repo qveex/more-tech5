@@ -118,11 +118,13 @@ fun DepartmentInfoScreen(
             val department = state.department
             if (department != null) {
                 Map(
-                    onEventSent = { },
-                    Modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .height(256.dp)
-                        .clip(RoundedCornerShape(8.dp))
+                        .clip(RoundedCornerShape(8.dp)),
+                    onStart = { },
+                    onStop = { },
+                    setMapView = {  }
                 )
                 Column {
                     Text(

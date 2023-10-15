@@ -10,6 +10,13 @@ class SharedViewModel @Inject constructor(
 
 ) : ViewModel() {
 
-    var infoParam: Info? = null
+    var infoParams: InfoParams? = null
 
 }
+
+data class InfoParams(
+    val serviceFilters: List<Long>,
+    val departmentFilters: List<Long>,
+    val clientFilters: List<Long>,
+    val hasRamp: Boolean
+)

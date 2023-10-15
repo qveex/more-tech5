@@ -34,7 +34,7 @@ fun NavGraphBuilder.startNav(navController: NavController) {
                 navController.safeNavigate(
                     when (it) {
                         is StartContract.Effect.Navigation.ToHomeScreen -> {
-                            sharedViewModel.infoParam = it.info
+                            sharedViewModel.infoParams = it.infoParams
                             Screen.Home.route
                         }
                         is StartContract.Effect.Navigation.ToInfoScreen -> Screen.DepartmentInfo.pasParam(it.id)

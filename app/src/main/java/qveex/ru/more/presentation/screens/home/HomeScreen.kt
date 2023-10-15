@@ -108,7 +108,11 @@ fun HomeScreen(
                 .fillMaxSize(),
             contentAlignment = Alignment.CenterEnd,
         ) {
-            Map(onEventSent)
+            Map(
+                onStart = { onEventSent(HomeContract.Event.OnStart) },
+                onStop = { onEventSent(HomeContract.Event.OnStop) },
+                setMapView = { onEventSent(HomeContract.Event.SetMapView(it)) }
+            )
             MapZoomButtons(
                 plusZoomOnClickListener = { onEventSent(HomeContract.Event.PlusZoom) },
                 minusZoomOnClickListener = { onEventSent(HomeContract.Event.MinusZoom) },
