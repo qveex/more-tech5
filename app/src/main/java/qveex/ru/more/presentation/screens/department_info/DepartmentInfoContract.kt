@@ -1,5 +1,6 @@
 package qveex.ru.more.presentation.screens.department_info
 
+import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.presentation.base.ViewEvent
@@ -9,7 +10,9 @@ import qveex.ru.more.presentation.base.ViewState
 class DepartmentInfoContract {
 
     sealed class Event : ViewEvent {
-        data object Click: Event()
+        data object OnStart: Event()
+        data object OnStop: Event()
+        data class SetMapView(val mapView: MapView): Event()
     }
 
     data class State(

@@ -3,6 +3,7 @@ package qveex.ru.more.presentation.screens.department_info
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +19,8 @@ import androidx.compose.material.icons.outlined.AccessibleForward
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
@@ -52,6 +55,8 @@ import qveex.ru.more.presentation.components.Map
 import qveex.ru.more.presentation.screens.department_info.components.DayInWeekItem
 import qveex.ru.more.presentation.screens.department_info.components.LoadStatisticChart
 import qveex.ru.more.presentation.screens.snack
+import qveex.ru.more.ui.theme.errorColor
+import qveex.ru.more.ui.theme.successColor
 
 private const val TAG = "DepartmentInfoScreen"
 
@@ -113,7 +118,6 @@ fun DepartmentInfoScreen(
                 .padding(padding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
-            //horizontalAlignment = Alignment.CenterHorizontally
         ) {
             val department = state.department
             if (department != null) {
@@ -121,10 +125,11 @@ fun DepartmentInfoScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(256.dp)
-                        .clip(RoundedCornerShape(8.dp)),
-                    onStart = { },
-                    onStop = { },
-                    setMapView = {  }
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { },
+                    onStart = { onEventSent(DepartmentInfoContract.Event.OnStart) },
+                    onStop = { onEventSent(DepartmentInfoContract.Event.OnStop) },
+                    setMapView = { onEventSent(DepartmentInfoContract.Event.SetMapView(it)) }
                 )
                 Column {
                     Text(
@@ -137,17 +142,9 @@ fun DepartmentInfoScreen(
                     )
                     Text(
                         text = department.metroStation,
-                        style = MaterialTheme.typography.bodySmall
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                val isOpen = department.status == Status.OPEN
-                val statusColor = if (isOpen) Color.Green else Color.Red
-                val statusText = stringResource(
-                    id =
-                    if (isOpen) R.string.title_open
-                    else R.string.title_closed
-                )
-
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -160,10 +157,25 @@ fun DepartmentInfoScreen(
                     LoadStatisticChart(load = it)
                 }
 
-                Text(
-                    text = statusText,
-                    style = MaterialTheme.typography.bodyMedium
+                val isOpen = department.status == Status.OPEN
+                val statusColor = if (isOpen) successColor else errorColor
+                val statusText = stringResource(
+                    id =
+                    if (isOpen) R.string.title_open
+                    else R.string.title_closed
                 )
+                Card(
+                    shape = MaterialTheme.shapes.medium,
+                    colors = CardDefaults.cardColors(
+                        containerColor = statusColor.copy(alpha = .6f),
+                    )
+                ) {
+                    Text(
+                        modifier = Modifier.padding(8.dp),
+                        text = statusText,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
 
                 department.hasRamp.takeIf { it }?.let { hasRamp ->
                     Row(verticalAlignment = Alignment.CenterVertically) {

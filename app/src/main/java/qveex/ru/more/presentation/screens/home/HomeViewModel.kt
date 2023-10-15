@@ -303,7 +303,7 @@ class HomeViewModel @Inject constructor(
                 title,
                 TextStyle()
                     .setPlacement(TextStyle.Placement.BOTTOM)
-                    .setSize(16.0f)
+                    .setSize(12.0f)
                     .setOutlineColor(Color.WHITE)
             )
             userData = MarkParams(atmDepartment.id, atmDepartment.type)

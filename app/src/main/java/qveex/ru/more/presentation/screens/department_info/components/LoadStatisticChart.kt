@@ -62,6 +62,7 @@ fun LoadStatisticChart(
             )
         },
         backgroundColor = MaterialTheme.colorScheme.background,
+        paddingEnd = 0.dp,
         showYAxis = false,
         xAxisData = xAxisData,
         yAxisData = yAxisData,
@@ -80,7 +81,7 @@ fun LoadStatisticChart(
     BarChart(
         modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp),
+            .height(135.dp),
         barChartData = barChartData
     )
 }

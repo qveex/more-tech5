@@ -226,7 +226,7 @@ private fun StartItem(filter: ServiceFilter, selected: Boolean) {
     Card(
         onClick = filter.onClickListener,
         modifier = Modifier.padding(8.dp),
-        border = BorderStroke(2.dp, filter.backgroundColor.copy(alpha = 1f)).takeIf { selected },
+        border = BorderStroke(3.dp, filter.backgroundColor.copy(alpha = 1f)).takeIf { selected },
         colors = CardDefaults.cardColors(containerColor = filter.backgroundColor)
     ) {
         Column(
