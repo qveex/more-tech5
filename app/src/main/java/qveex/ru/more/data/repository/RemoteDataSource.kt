@@ -20,13 +20,13 @@ class RemoteDataSource @Inject constructor(
     suspend fun getAtmInfo(atmId: Long) = withContext(coroutineContext) {
         runCatching {
             api.getAtmInfo(atmId).body()
-        }.also { Log.i("REMOTE", it.toString()) }
+        }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
     }
 
     suspend fun getDepartmentInfo(departmentId: Long) = withContext(coroutineContext) {
         runCatching {
+            api.getDepartmentInfo(departmentId).body()
         }.onFailure { Log.i("REMOTE", "remote error = $it") }.getOrNull()
-        api.getDepartmentInfo(departmentId).body()
     }
 
     suspend fun getDepartmentsAndAtmsAround(

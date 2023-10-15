@@ -22,8 +22,8 @@ class StartViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             setState { copy(isFiltersLoading = true) }
-            val departmentFilters = interactor.getDepartmentFilters()!!
-            val clientFilters = interactor.getClientFilters()!!
+            val departmentFilters = interactor.getDepartmentFilters() ?: emptyList()
+            val clientFilters = interactor.getClientFilters() ?: emptyList()
             setState {
                 copy(
                     isFiltersLoading = false,
