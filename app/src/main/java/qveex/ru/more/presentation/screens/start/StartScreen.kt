@@ -69,13 +69,13 @@ fun StartScreen(
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_credit_card),
                 text = stringResource(id = R.string.title_credit),
-                backgroundColor = Color(0x99FDE35A),
+                backgroundColor = Color(0x99CCF8FF),
                 onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(0, listOf(4, 5))) }
             ),
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_loan),
                 text = stringResource(id = R.string.title_find_atm),
-                backgroundColor = Color(0x9958FF6D),
+                backgroundColor = Color(0x99FDE35A),
                 onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(1, listOf(1, 2))) }
             ),
             ServiceFilter(
@@ -87,7 +87,7 @@ fun StartScreen(
             ServiceFilter(
                 image = painterResource(id = R.drawable.ic_atm),
                 text = stringResource(id = R.string.title_open_deposit),
-                backgroundColor = Color(0x99F254FF),
+                backgroundColor = Color(0x9958FF6D),
                 onClickListener = { onEventSent(StartContract.Event.SelectServiceFilter(3, listOf(3))) }
             ),
         )
