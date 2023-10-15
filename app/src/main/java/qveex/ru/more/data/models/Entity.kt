@@ -9,7 +9,7 @@ import qveex.ru.more.R
 data class Entity(
     val day: Days,
     val openHours: OpenHours,
-    val workLoad: Map<String, Int>
+    val workload: Map<String, Int>? = null
 )
 
 @Serializable

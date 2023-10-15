@@ -3,9 +3,7 @@ package qveex.ru.more.presentation.screens.department_info
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,9 +47,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import qveex.ru.more.R
 import qveex.ru.more.data.models.Status
-import qveex.ru.more.presentation.components.EmptyContent
+import qveex.ru.more.presentation.components.AppLoading
 import qveex.ru.more.presentation.components.Map
 import qveex.ru.more.presentation.screens.department_info.components.DayInWeekItem
+import qveex.ru.more.presentation.screens.department_info.components.LoadStatisticChart
 import qveex.ru.more.presentation.screens.snack
 
 private const val TAG = "DepartmentInfoScreen"
@@ -116,7 +115,8 @@ fun DepartmentInfoScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
             //horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            state.department?.let { department ->
+            val department = state.department
+            if (department != null) {
                 Map(
                     onEventSent = { },
                     Modifier
@@ -154,6 +154,10 @@ fun DepartmentInfoScreen(
                         DayInWeekItem(curDay = state.curDay, days = it)
                     }
                 }
+                department.individual.find { it.day == state.curDay }.also { Log.i(TAG, "day = $it") } ?.workload?.let {
+                    LoadStatisticChart(load = it)
+                }
+
                 Text(
                     text = statusText,
                     style = MaterialTheme.typography.bodyMedium
@@ -181,7 +185,7 @@ fun DepartmentInfoScreen(
                         Text(text = stringResource(id = R.string.title_with_vip))
                     }
                 }
-            } ?: EmptyContent(message = "")
+            } else AppLoading()
         }
     }
 }

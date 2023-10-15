@@ -3,7 +3,7 @@ package qveex.ru.more.presentation.screens.department_info.components
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -36,7 +36,7 @@ fun DayInWeekItem(
             colors = CardDefaults.cardColors(
                 containerColor = cardColor
             ),
-            shape = CircleShape
+            shape = RoundedCornerShape(12.dp)
         ) {
             Text(
                 modifier = Modifier.padding(8.dp),
@@ -44,8 +44,8 @@ fun DayInWeekItem(
             )
         }
         Spacer(modifier = Modifier.padding(4.dp))
-        Text(text = days.openHours.from)
-        Text(text = days.openHours.to)
+        Text(text = days.openHours.from ?: "-")
+        Text(text = days.openHours.to ?: "-")
     }
 }
 

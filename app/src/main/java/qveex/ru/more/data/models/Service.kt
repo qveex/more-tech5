@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class Service(
     val id: Long,
     val name: String,
-    val serviceCapability: String,
-    val serviceActivity: String,
+    val serviceCapability: String?,
+    val serviceActivity: String?,
 )

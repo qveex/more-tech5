@@ -32,7 +32,7 @@ class DepartmentInfoViewModel @Inject constructor(
         Calendar.THURSDAY  -> Days.THURSDAY
         Calendar.FRIDAY    -> Days.FRIDAY
         Calendar.SATURDAY  -> Days.SATURDAY
-        Calendar.SUNDAY    -> Days.SUNDAY
+        Calendar.SUNDAY    -> Days.MONDAY
         else -> Days.MONDAY
     }
 
