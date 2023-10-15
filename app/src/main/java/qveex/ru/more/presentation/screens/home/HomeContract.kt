@@ -18,6 +18,7 @@ class HomeContract {
         data object OnStart : Event()
         data object OnStop : Event()
         data object PlusZoom : Event()
+        data object UpdatePoints: Event()
         data object MinusZoom : Event()
         data object FindCurrentLocation : Event()
     }

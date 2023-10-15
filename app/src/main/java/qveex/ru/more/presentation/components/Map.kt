@@ -15,6 +15,11 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.location.Location
 import com.yandex.mapkit.location.LocationStatus
+import com.yandex.mapkit.map.CameraListener
+import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.CameraUpdateReason
+import com.yandex.mapkit.map.Map
+import com.yandex.mapkit.map.Map.CameraCallback
 import com.yandex.mapkit.mapview.MapView
 import qveex.ru.more.presentation.screens.home.HomeContract
 
@@ -44,6 +49,9 @@ fun Map(
         MapView(it).also {
             it.map.isNightModeEnabled = isSystemInDarkTheme
             onEventSent(HomeContract.Event.SetMapView(it))
+            val cameraListener =
+                CameraListener { _, _, _, _ -> onEventSent(HomeContract.Event.UpdatePoints) }
+            it.mapWindow.map.addCameraListener(cameraListener)
         }
 
     }, modifier = modifier)

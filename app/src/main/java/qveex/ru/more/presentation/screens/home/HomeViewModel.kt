@@ -114,6 +114,7 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
+            is HomeContract.Event.UpdatePoints -> onZoom()
             is HomeContract.Event.SetInfoParam -> {
                 infoParam = event.info
             }
@@ -185,21 +186,25 @@ class HomeViewModel @Inject constructor(
             ),
             Animation(Animation.Type.SMOOTH, 0.3f)
         ) {
-            getBorders()
-            viewModelScope.launch {
-                interactor.getDepartmentsAndAtmsAround(
-                    curLocation = curLocation,
-                    leftTopCoordinate = leftTopBorder,
-                    rightBottomCoordinate = rightBottomBorder
-                )?.let { info ->
-                    Log.i("MAP", "info = $info")
-                    (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
-                        addPlace(it)
-                    }
-                }
-            }
             setState {
                 copy(isAnimation = false)
+            }
+        }
+
+    }
+
+    private fun onZoom() {
+        getBorders()
+        viewModelScope.launch {
+            interactor.getDepartmentsAndAtmsAround(
+                curLocation = curLocation,
+                leftTopCoordinate = leftTopBorder,
+                rightBottomCoordinate = rightBottomBorder
+            )?.let { info ->
+                Log.i("MAP", "info = $info")
+                (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
+                    addPlace(it)
+                }
             }
         }
 
