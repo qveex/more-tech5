@@ -186,6 +186,18 @@ class HomeViewModel @Inject constructor(
             Animation(Animation.Type.SMOOTH, 0.3f)
         ) {
             getBorders()
+            viewModelScope.launch {
+                interactor.getDepartmentsAndAtmsAround(
+                    curLocation = curLocation,
+                    leftTopCoordinate = leftTopBorder,
+                    rightBottomCoordinate = rightBottomBorder
+                )?.let { info ->
+                    Log.i("MAP", "info = $info")
+                    (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
+                        addPlace(it)
+                    }
+                }
+            }
             setState {
                 copy(isAnimation = false)
             }
@@ -207,7 +219,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             Log.i("MAP", "infoParam = $infoParam")
             (infoParam ?: interactor.getDepartmentsAndAtmsAround(
-                curLocation = curLocation
+                curLocation = curLocation,
+                leftTopCoordinate = leftTopBorder,
+                rightBottomCoordinate = rightBottomBorder
             ))?.let { info ->
                 Log.i("MAP", "info = $info")
                 (info.atms.map { it.toUi() } + info.departments.map { it.toUi() }).forEach {
@@ -292,8 +306,8 @@ class HomeViewModel @Inject constructor(
         val height = mapView.mapWindow.height()
         val width = mapView.mapWindow.width()
 
-        val leftTop = ScreenPoint(0f, height.toFloat())
-        val rightBottom = ScreenPoint(width.toFloat(), 0f)
+        val leftTop = ScreenPoint(0f, 0f)
+        val rightBottom = ScreenPoint(width.toFloat(), height.toFloat())
 
         val worldLeftTopBorder = mapView.mapWindow.screenToWorld(leftTop)
         val worldRightBottomBorder = mapView.mapWindow.screenToWorld(rightBottom)
