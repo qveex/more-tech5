@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.ScreenPoint
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.LocationStatus
 import com.yandex.mapkit.map.CameraPosition
@@ -64,13 +65,17 @@ class HomeViewModel @Inject constructor(
     private lateinit var mapObjectCollection: MapObjectCollection
     private var curLocation = Location(.0, .0)
     private var infoParam: Info? = null
+    private var leftTopBorder: Location? = null
+    private var rightBottomBorder: Location? = null
 
     init {
         viewModelScope.launch {
             delay(1000)
             Log.i("REMOTE", "curLoc = $curLocation")
             val objects = infoParam ?: interactor.getDepartmentsAndAtmsAround(
-                curLocation = curLocation
+                curLocation = curLocation,
+                leftTopCoordinate = leftTopBorder,
+                rightBottomCoordinate = rightBottomBorder
             )
 
             setState {
@@ -109,7 +114,10 @@ class HomeViewModel @Inject constructor(
             is HomeContract.Event.OnStop -> onStop()
             is HomeContract.Event.MinusZoom -> setZoom(-1f)
             is HomeContract.Event.PlusZoom -> setZoom(1f)
-            is HomeContract.Event.SetInfoParam -> { infoParam = event.info }
+            is HomeContract.Event.SetInfoParam -> {
+                infoParam = event.info
+            }
+
             is HomeContract.Event.SetMapView -> {
                 mapView = event.mapView
                 mapObjectCollection = mapView.mapWindow.map.mapObjects.addCollection()
@@ -176,7 +184,12 @@ class HomeViewModel @Inject constructor(
                 cameraPosition.tilt
             ),
             Animation(Animation.Type.SMOOTH, 0.3f)
-        ) { setState { copy(isAnimation = false) } }
+        ) {
+            getBorders()
+            setState {
+                copy(isAnimation = false)
+            }
+        }
 
     }
 
@@ -273,6 +286,24 @@ class HomeViewModel @Inject constructor(
             addTapListener(markOnClick)
         }
 
+    }
+
+    private fun getBorders() {
+        val height = mapView.mapWindow.height()
+        val width = mapView.mapWindow.width()
+
+        val leftTop = ScreenPoint(0f, height.toFloat())
+        val rightBottom = ScreenPoint(width.toFloat(), 0f)
+
+        val worldLeftTopBorder = mapView.mapWindow.screenToWorld(leftTop)
+        val worldRightBottomBorder = mapView.mapWindow.screenToWorld(rightBottom)
+
+        leftTopBorder = worldLeftTopBorder?.let {
+            Location(worldLeftTopBorder.latitude, worldLeftTopBorder.longitude)
+        }
+        rightBottomBorder = worldRightBottomBorder?.let {
+            Location(worldRightBottomBorder.latitude, worldRightBottomBorder.longitude)
+        }
     }
 
     private data class MarkParams(val id: Long, val type: InfrastructureType)

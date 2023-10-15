@@ -27,7 +27,7 @@ class HomeContract {
         val isAnimation: Boolean = false,
         val showBottomSheet: Boolean = false,
         val atmsAndDepartments: List<AtmDepartment> = emptyList(),
-        val points: List<Point> = emptyList()
+        val points: List<Point> = emptyList(),
     ) : ViewState
 
     sealed class Effect : ViewSideEffect {
