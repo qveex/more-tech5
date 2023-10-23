@@ -218,9 +218,9 @@ class HomeViewModel @Inject constructor(
                         infoParams = infoParams
                     )?.let { info ->
                         Log.i(TAG, "info = $info")
-                        (info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }).forEach {
-                            addPlace(it)
-                        }
+                        val atmsAndDepartments = info.atms.map { it.toUi() } + info.departments.map { it.toUi(curDay) }
+                        atmsAndDepartments.forEach { addPlace(it) }
+                        setState { copy(atmsAndDepartments = atmsAndDepartments) }
                     }
                     delay(1500)
                 }

@@ -74,12 +74,8 @@ fun AtmDepartmentItem(
             val isOpenText = stringResource(
                 id = if (isOpen) R.string.title_open else R.string.title_closed
             )
-            val atText = if (isAtm) "" else stringResource(
-                id = R.string.before,
-                if (isOpen) atmDepartment.closeAt!! else atmDepartment.openAt!!
-            )
             Text(
-                text = "$isOpenText $atText",
+                text = isOpenText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = color
             )

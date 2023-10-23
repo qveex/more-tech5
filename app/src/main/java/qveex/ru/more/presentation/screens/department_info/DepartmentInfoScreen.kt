@@ -3,7 +3,6 @@ package qveex.ru.more.presentation.screens.department_info
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -14,11 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccessibleForward
 import androidx.compose.material.icons.outlined.AlarmOn
@@ -52,7 +47,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.yandex.mapkit.mapview.MapView
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -61,11 +55,9 @@ import qveex.ru.more.data.models.Atm
 import qveex.ru.more.data.models.Days
 import qveex.ru.more.data.models.Department
 import qveex.ru.more.data.models.Status
-import qveex.ru.more.presentation.components.AppLoading
 import qveex.ru.more.presentation.components.Map
 import qveex.ru.more.presentation.screens.department_info.components.DayInWeekItem
 import qveex.ru.more.presentation.screens.department_info.components.LoadStatisticChart
-import qveex.ru.more.presentation.screens.home.AtmDepartment
 import qveex.ru.more.presentation.screens.snack
 import qveex.ru.more.ui.theme.errorColor
 import qveex.ru.more.ui.theme.successColor
@@ -128,17 +120,16 @@ fun DepartmentInfoScreen(
                     )
                 )
                 .padding(padding)
-                .padding(horizontal = 16.dp, vertical = 32.dp)
-                .verticalScroll(rememberScrollState()),
+                .padding(start = 16.dp, end =  16.dp, bottom = 85.dp, top = 32.dp ),
+                //.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp, Alignment.Top),
         ) {
 
             Map(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(256.dp)
-                    .clip(RoundedCornerShape(8.dp))
-                    .clickable { },
+                    .height(245.dp)
+                    .clip(RoundedCornerShape(8.dp)),
                 onStart = { onEventSent(DepartmentInfoContract.Event.OnStart) },
                 onStop = { onEventSent(DepartmentInfoContract.Event.OnStop) },
                 setMapView = { onEventSent(DepartmentInfoContract.Event.SetMapView(it)) }
