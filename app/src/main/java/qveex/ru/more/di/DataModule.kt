@@ -45,8 +45,4 @@ object DataModule {
     @Singleton
     fun provideApi(retrofit: Retrofit): Api = retrofit.create(Api::class.java)
 
-    @Provides
-    @Singleton
-    fun provideRemoteDataSource(api: Api) = RemoteDataSource(api = api)
-
 }

@@ -2,18 +2,12 @@ package qveex.ru.more.domain.interactor
 
 import android.util.Log
 import qveex.ru.more.InfoParams
-import qveex.ru.more.data.models.Atm
-import qveex.ru.more.data.models.Days
-import qveex.ru.more.data.models.Department
-import qveex.ru.more.data.models.Entity
 import qveex.ru.more.data.models.Location
-import qveex.ru.more.data.models.Info
-import qveex.ru.more.data.models.OpenHours
 import qveex.ru.more.data.models.RequestFilter
-import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.repository.Repository
+import javax.inject.Inject
 
-class HomeInteractor(
+class HomeInteractor @Inject constructor(
     private val repo: Repository
 ) {
 

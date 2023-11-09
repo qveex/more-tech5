@@ -1,14 +1,9 @@
 package qveex.ru.more.domain.interactor
 
-import qveex.ru.more.data.models.Days
-import qveex.ru.more.data.models.Department
-import qveex.ru.more.data.models.Entity
-import qveex.ru.more.data.models.Location
-import qveex.ru.more.data.models.OpenHours
-import qveex.ru.more.data.models.Status
 import qveex.ru.more.domain.repository.Repository
+import javax.inject.Inject
 
-class DepartmentInteractor(
+class DepartmentInteractor @Inject constructor(
     private val repo: Repository
 ) {
 

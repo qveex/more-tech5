@@ -1,13 +1,11 @@
 package qveex.ru.more.domain.interactor
 
-import android.util.Log
-import qveex.ru.more.data.models.Filter
-import qveex.ru.more.data.models.Info
 import qveex.ru.more.data.models.Location
 import qveex.ru.more.data.models.RequestFilter
 import qveex.ru.more.domain.repository.Repository
+import javax.inject.Inject
 
-class StartInteractor(
+class StartInteractor @Inject constructor(
     private val repo: Repository
 ) {
 
