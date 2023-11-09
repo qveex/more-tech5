@@ -3,7 +3,7 @@
 
 # How to run app?
 1. Download [last release from github](https://github.com/qveex/more-tech5/releases) and install
-2. Or clone repository, set `MAP_KIT_API_KEY` in `lcoal.properties` for yandex maps and build project
+2. Or clone repository, set `MAP_KIT_API_KEY` in `local.properties` for yandex maps and build project
 
 # Stack:
 - Kotlin
